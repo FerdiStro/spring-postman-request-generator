@@ -5,11 +5,12 @@
     <vendor>ferdistro</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.ferdistro.springpostmanrequestgenerator.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.ferdistro.springpostmanrequestgenerator.startup.MyProjectActivity" />
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.github.ferdistro.springpostmanrequestgenerator.JsonGeneratorLineMarkerProvider"/>
     </extensions>
 </idea-plugin>
