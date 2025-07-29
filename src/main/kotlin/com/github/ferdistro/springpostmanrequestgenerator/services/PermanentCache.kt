@@ -62,7 +62,7 @@ class PermanentCache(private val project: Project) {
         setFocusToGeneratedLine(jsonString, item)
     }
 
-    fun setFocusToGeneratedLine(jsonString: String, item: Item) {
+    private fun setFocusToGeneratedLine(jsonString: String, item: Item) {
         val virtualFile = VfsUtil.findFileByIoFile(file, true) ?: return
         val editorManager = FileEditorManager.getInstance(project)
 
