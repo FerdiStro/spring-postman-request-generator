@@ -2,7 +2,7 @@
 
 # spring-postman-request-generator
 
-<img width="300" src="doc/img/icon.svg" alt="ICON">  
+<img width="300" src="https://github.com/FerdiStro/spring-postman-request-generator/raw/main/doc/img/icon.svg" alt="ICON">  
 <br>
 
 ![Build](https://github.com/FerdiStro/spring-postman-request-generator/workflows/Build/badge.svg)
@@ -29,7 +29,7 @@ Java classes using `@RequestMapping` annotations.
 2. Click the icon next to a method annotated with `@RequestMapping`.
 3. A Postman collection will be generated automatically as `generated-request.json` in your project’s base directory.
 
-![RequestMappingInterface.png](doc/img/RequestMappingInterface.png)
+![RequestMappingInterface.png](https://github.com/FerdiStro/spring-postman-request-generator/raw/main/doc/img/RequestMappingInterface.png)
 
 ---
 
@@ -70,7 +70,7 @@ Java classes using `@RequestMapping` annotations.
 
 > ✅ This is a valid Postman collection — just import it into Postman and start testing your endpoints.
 
-![postman collection](doc/img/PostmanCollection.png)
+![postman collection](https://github.com/FerdiStro/spring-postman-request-generator/raw/main/doc/img/PostmanCollection.png)
 
 ---
 
