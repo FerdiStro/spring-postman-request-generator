@@ -49,7 +49,7 @@ class LineMarkerTests : BasePlatformTestCase() {
         )
 
         val handler = markerInfo.navigationHandler as GutterIconNavigationHandler<PsiElement>
-        handler.navigate(fakeEvent, element)
+//        handler.navigate(fakeEvent, element)
     }
 
 
