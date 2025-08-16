@@ -17,7 +17,7 @@ class JavaLineMarkerProvider(
     @Suppress("UNUSED")
     constructor() : this(PostmanRequestGenerator())
 
-    override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
+    override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<PsiElement>? {
         if (element !is PsiMethod) return null
 
         if (postmanRequestGenerator.hasSupportedAnnotation(element).not()) return null

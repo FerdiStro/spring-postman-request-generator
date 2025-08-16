@@ -6,6 +6,8 @@ import com.intellij.codeInsight.daemon.LineMarkerInfo
 import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
+import org.jetbrains.kotlin.asJava.elements.KtLightMethod
+import org.jetbrains.kotlin.idea.caches.resolve.analyzeInContext
 import org.jetbrains.kotlin.idea.codeInsight.lineMarkers.shared.expectOrActualAnchor
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import java.awt.event.MouseEvent
@@ -19,20 +21,16 @@ class KotlinLineMarkerProvider(
     @Suppress("UNUSED")
     constructor() : this(PostmanRequestGenerator())
 
-    override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
+    override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<PsiElement>? {
         if (element !is PsiMethod) return null
 
         if (postmanRequestGenerator.hasSupportedAnnotation(element).not()) return null
 
-        if(element !is KtNamedFunction) return null
-
-        println("success")
-
-        val anchor = element.expectOrActualAnchor
+        if (element !is KtLightMethod) return null
 
         return LineMarkerInfo(
-            /* element = */ anchor,
-            /* range = */ anchor.textRange,
+            /* element = */ element,
+            /* range = */ element.textRange,
             /* icon = */ IconHolder.ICON,
             /* tooltipProvider = */ { "Generate JSON" },
             /* navHandler = */ { _: MouseEvent?, _: Any? -> postmanRequestGenerator.generateJson(element) },

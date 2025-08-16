@@ -2,9 +2,12 @@ package com.github.ferdistro.springpostmanrequestgenerator
 
 import com.github.ferdistro.springpostmanrequestgenerator.line.KotlinLineMarkerProvider
 import com.github.ferdistro.springpostmanrequestgenerator.services.PostmanRequestGenerator
+import com.intellij.codeInsight.daemon.GutterIconNavigationHandler
+import com.intellij.psi.PsiElement
 import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.jetbrains.kotlin.psi.KtFile
+import java.awt.event.MouseEvent
 
 @TestDataPath($$"$CONTENT_ROOT/src/test/testData")
 class LineMarkerTestsKotlin : BasePlatformTestCase() {
@@ -14,7 +17,7 @@ class LineMarkerTestsKotlin : BasePlatformTestCase() {
     val generator = PostmanRequestGenerator()
     val provider = KotlinLineMarkerProvider(generator)
 
-    fun testFile(){
+    fun testFile() {
         myFixture.configureByFiles(
             "TestControllerKt.kt",
             "org/springframework/web/bind/annotation/RequestMapping.java"
@@ -35,7 +38,7 @@ class LineMarkerTestsKotlin : BasePlatformTestCase() {
         println(file)
     }
 
-    /*
+
     fun testMouseEvent() {
         myFixture.configureByFiles(
             "TestControllerKt.kt",
@@ -43,10 +46,13 @@ class LineMarkerTestsKotlin : BasePlatformTestCase() {
         )
 
         val file = myFixture.file
-        val annotatedMethod = PsiTreeUtil.findChildrenOfType(file, PsiMethod::class.java)
-            .first()
+        check(file is KtFile)
+        val classes = file.classes
+        val methods = classes.map { c -> c.methods.filter { m -> m.isConstructor.not() }.toList() }.flatten()
 
-        assertNotNull("annotatedMethod should be found", annotatedMethod)
+        val annotatedMethod = methods.single { method ->
+            method.annotations.any { it.resolveAnnotationType()?.qualifiedName == "org.springframework.web.bind.annotation.RequestMapping" }
+        }
 
         val markerInfo = provider.getLineMarkerInfo(annotatedMethod)
         assertNotNull("MarkerInfo should not be null", markerInfo)
@@ -66,31 +72,35 @@ class LineMarkerTestsKotlin : BasePlatformTestCase() {
 
         val handler = markerInfo.navigationHandler as GutterIconNavigationHandler<PsiElement>
         handler.navigate(fakeEvent, element)
-    }*/
+    }
 
 
-/*    fun testLineMarkerInfo() {
+    fun testLineMarkerInfo() {
         myFixture.configureByFiles(
             "TestControllerKt.kt",
             "org/springframework/web/bind/annotation/RequestMapping.java"
         )
 
         val file = myFixture.file
-        val methods = PsiTreeUtil.findChildrenOfType(file, PsiMethod::class.java).toList()
+        check(file is KtFile)
+        val classes = file.classes
+        val methods = classes.map { c -> c.methods.filter { m -> m.isConstructor.not() }.toList() }.flatten()
 
-        val annotatedMethod = methods.first {
-            it.hasAnnotation("org.springframework.web.bind.annotation.RequestMapping")
+        val annotatedMethod = methods.single { method ->
+            method.annotations.any { it.resolveAnnotationType()?.qualifiedName == "org.springframework.web.bind.annotation.RequestMapping" }
         }
 
         val markerInfo = provider.getLineMarkerInfo(annotatedMethod)
         assertNotNull("Line Marker shout be created", markerInfo)
         assertEquals("Generate JSON", markerInfo?.lineMarkerTooltip)
 
-        val normalMethod = methods.first {
-            !it.hasAnnotation("org.springframework.web.bind.annotation.RequestMapping")
+        val normalMethods = methods.filter { method ->
+            method.annotations.none { it.resolveAnnotationType()?.qualifiedName == "org.springframework.web.bind.annotation.RequestMapping" }
         }
+        check(normalMethods.size == 1)
+        val normalMethod = normalMethods.single()
 
         val normalMarkerInfo = provider.getLineMarkerInfo(normalMethod)
         assertNull("LineMarker shouldn't be created", normalMarkerInfo)
-    }*/
+    }
 }
