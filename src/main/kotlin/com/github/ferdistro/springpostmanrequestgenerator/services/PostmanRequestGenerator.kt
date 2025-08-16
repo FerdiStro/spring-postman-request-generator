@@ -1,4 +1,4 @@
-package com.github.ferdistro.springpostmanrequestgenerator
+package com.github.ferdistro.springpostmanrequestgenerator.services
 
 import com.github.ferdistro.springpostmanrequestgenerator.annotation.AnnotationData
 import com.github.ferdistro.springpostmanrequestgenerator.annotation.AnnotationExtractor
@@ -7,19 +7,11 @@ import com.github.ferdistro.springpostmanrequestgenerator.postman.Item
 import com.github.ferdistro.springpostmanrequestgenerator.postman.QueryItem
 import com.github.ferdistro.springpostmanrequestgenerator.postman.Request
 import com.github.ferdistro.springpostmanrequestgenerator.postman.URL
-import com.github.ferdistro.springpostmanrequestgenerator.services.PermanentCache
-import com.intellij.codeInsight.daemon.LineMarkerInfo
-import com.intellij.codeInsight.daemon.LineMarkerProvider
-import com.intellij.openapi.editor.markup.GutterIconRenderer
-import com.intellij.openapi.util.IconLoader
-import com.intellij.psi.PsiElement
+import com.intellij.openapi.components.Service
 import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiTypeElement
-import java.awt.event.MouseEvent
-import javax.swing.Icon
 
-class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
-    private val icon: Icon = IconLoader.getIcon("/META-INF/icon.svg", JsonGeneratorLineMarkerProvider::class.java)
+@Service(Service.Level.PROJECT)
+class PostmanRequestGenerator {
     private val baseUrl: String = "{{PROTOCOL}}{{SERVER}}"
     private val appContext: String = "{{APP_CONTEXT}}"
 
@@ -31,34 +23,11 @@ class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
         .map { it.annotationQualifiedName }
         .toSet()
 
-    override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
-        if (element !is PsiMethod) return null
-
-        if (!hasSupportedAnnotation(element)) return null
-
-        val anchor = findAnchorElement(element)
-
-        return LineMarkerInfo(
-            /* element = */ anchor,
-            /* range = */ anchor.textRange,
-            /* icon = */ icon,
-            /* tooltipProvider = */ { "Generate JSON" },
-            /* navHandler = */ { _: MouseEvent?, _: Any? -> generateJson(element) },
-            /* alignment = */ GutterIconRenderer.Alignment.RIGHT,
-            /* accessibleNameProvider = */ { "Generate JSON" }
-        )
-    }
-
-    private fun hasSupportedAnnotation(method: PsiMethod): Boolean {
+    fun hasSupportedAnnotation(method: PsiMethod): Boolean {
         return supportedAnnotations.any { method.hasAnnotation(it) }
     }
 
-    private fun findAnchorElement(method: PsiMethod): PsiElement {
-        val anchor = method.modifierList.nextSibling ?: method
-        return anchor as? PsiTypeElement ?: (method.nameIdentifier ?: method)
-    }
-
-    private fun generateJson(method: PsiMethod) {
+    fun generateJson(method: PsiMethod) {
         val queryItems = extractQueryParameters(method)
         val annotationData = extractAnnotationData(method)
         val urlComponents = buildUrlComponents(annotationData.path, queryItems)
@@ -76,6 +45,7 @@ class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
         val service = method.project.getService(PermanentCache::class.java)
         service.addRequest(item)
     }
+
 
     private fun extractQueryParameters(method: PsiMethod): List<QueryItem> {
         return method.parameterList.parameters.map { param ->
@@ -102,6 +72,7 @@ class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
         )
     }
 
+
     private fun buildRawUrl(path: String): String {
         return if (path.isNotEmpty()) {
             "$baseUrl/$appContext$path"
@@ -118,4 +89,3 @@ class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
         }
     }
 }
-
