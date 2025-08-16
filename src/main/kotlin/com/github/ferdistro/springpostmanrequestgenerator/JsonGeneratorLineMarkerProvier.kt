@@ -9,9 +9,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiTypeElement
 import org.jetbrains.annotations.NotNull
-import org.jetbrains.annotations.Nullable
 import java.awt.event.MouseEvent
 import javax.swing.Icon
+
+private const val ANNOTATION_NAME = "org.springframework.web.bind.annotation.RequestMapping"
 
 class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
     val icon: Icon = IconLoader.getIcon("/META-INF/icon.svg", JsonGeneratorLineMarkerProvider::class.java)
@@ -20,30 +21,25 @@ class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
     val urlPath: String = "{{APP_CONTEXT}}}"
 
 
-    @Nullable
-    override fun getLineMarkerInfo(@NotNull element: PsiElement): LineMarkerInfo<*>? {
+    override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
         if (element is PsiMethod) {
-            if (!element.hasAnnotation("org.springframework.web.bind.annotation.RequestMapping")) {
+            if (!element.hasAnnotation(ANNOTATION_NAME)) {
                 return null
             }
             val modifiers = element.modifierList
 
             val anchor = modifiers.nextSibling ?: element
 
-            val finalAnchor = if (anchor is PsiTypeElement) {
-                anchor
-            } else {
-                element.nameIdentifier ?: element
-            }
+            val finalAnchor = anchor as? PsiTypeElement ?: (element.nameIdentifier ?: element)
 
             return LineMarkerInfo(
-                finalAnchor,
-                finalAnchor.textRange,
-                icon,
-                { "Generate JSON" },
-                { mouseEvent: MouseEvent?, elt -> generateJson(element) },
-                GutterIconRenderer.Alignment.RIGHT,
-                { "Generate JSON" })
+                /* element = */ finalAnchor,
+                /* range = */ finalAnchor.textRange,
+                /* icon = */ icon,
+                /* tooltipProvider = */ { "Generate JSON" },
+                /* navHandler = */ { _: MouseEvent?, _ -> generateJson(element) },
+                /* alignment = */ GutterIconRenderer.Alignment.RIGHT,
+                /* accessibleNameProvider = */ { "Generate JSON" })
         }
         return null
     }
@@ -53,7 +49,8 @@ class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
         val stringBuilder: StringBuilder = StringBuilder()
 
         val item = Item(
-            name = "", request = Request(
+            name = "",
+            request = Request(
                 method = "", header = emptyList(), url = URL(
                     raw = "", host = emptyList(), path = emptyList(), query = emptyList()
                 )
@@ -66,7 +63,7 @@ class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
 
             stringBuilder.append("Parameter: ${param.name}; Type: ${param.type.presentableText}")
 
-            request.url.query = request.url.query + QueryItem(key = param.name, value = "")
+            request.url.query += QueryItem(key = param.name, value = "")
 
             val annotations = param.modifierList?.annotations ?: emptyArray()
             for (ann in annotations) {
@@ -82,9 +79,7 @@ class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
             }
         }
 
-
-        val annotation = method.modifierList.findAnnotation("org.springframework.web.bind.annotation.RequestMapping")
-
+        val annotation = method.modifierList.findAnnotation(ANNOTATION_NAME)
 
         if (annotation != null) {
             val attributes = annotation.parameterList.attributes
@@ -112,13 +107,9 @@ class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
             }
         }
 
-
         val project = method.project
         val service = project.getService(PermanentCache::class.java)
-
-
         service.addRequest(item)
-
     }
 }
 
