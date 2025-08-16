@@ -1,6 +1,5 @@
 package com.github.ferdistro.springpostmanrequestgenerator.annotation
 
-import com.github.ferdistro.springpostmanrequestgenerator.annotation.AnnotationData
 import com.intellij.psi.PsiMethod
 
 class RequestMappingAnnotationExtractor : AnnotationExtractor(
