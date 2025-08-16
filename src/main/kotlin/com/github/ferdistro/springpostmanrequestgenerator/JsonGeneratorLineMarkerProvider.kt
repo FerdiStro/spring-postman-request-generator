@@ -15,6 +15,10 @@ class JsonGeneratorLineMarkerProvider(
     private val postmanRequestGenerator: PostmanRequestGenerator,
 ) : LineMarkerProvider {
 
+    //should have no-arg constructor
+    @Suppress("UNUSED")
+    constructor() : this(PostmanRequestGenerator())
+
     companion object {
         private val icon: Icon = IconLoader.getIcon("/META-INF/icon.svg", JsonGeneratorLineMarkerProvider::class.java)
     }
