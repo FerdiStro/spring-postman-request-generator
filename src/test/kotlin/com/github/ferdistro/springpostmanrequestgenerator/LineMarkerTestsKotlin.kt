@@ -10,7 +10,7 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import java.awt.event.MouseEvent
 
 @TestDataPath($$"$CONTENT_ROOT/src/test/testData")
-class LineMarkerTests : BasePlatformTestCase() {
+class LineMarkerTestsKotlin : BasePlatformTestCase() {
 
     override fun getTestDataPath() = "src/test/testData/"
 
@@ -19,11 +19,12 @@ class LineMarkerTests : BasePlatformTestCase() {
 
     fun testMouseEvent() {
         myFixture.configureByFiles(
-            "TestController.java",
+            "TestControllerKt.kt",
             "org/springframework/web/bind/annotation/RequestMapping.java"
         )
 
-        val annotatedMethod = PsiTreeUtil.findChildrenOfType(myFixture.file, PsiMethod::class.java)
+        val file = myFixture.file
+        val annotatedMethod = PsiTreeUtil.findChildrenOfType(file, PsiMethod::class.java)
             .first()
 
         assertNotNull("annotatedMethod should be found", annotatedMethod)
@@ -51,11 +52,12 @@ class LineMarkerTests : BasePlatformTestCase() {
 
     fun testLineMarkerInfo() {
         myFixture.configureByFiles(
-            "TestController.java",
+            "TestControllerKt.kt",
             "org/springframework/web/bind/annotation/RequestMapping.java"
         )
 
-        val methods = PsiTreeUtil.findChildrenOfType(myFixture.file, PsiMethod::class.java).toList()
+        val file = myFixture.file
+        val methods = PsiTreeUtil.findChildrenOfType(file, PsiMethod::class.java).toList()
 
         val annotatedMethod = methods.first {
             it.hasAnnotation("org.springframework.web.bind.annotation.RequestMapping")
