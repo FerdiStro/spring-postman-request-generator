@@ -1,5 +1,6 @@
 package com.github.ferdistro.springpostmanrequestgenerator
 
+import com.github.ferdistro.springpostmanrequestgenerator.line.JavaLineMarkerProvider
 import com.github.ferdistro.springpostmanrequestgenerator.services.PostmanRequestGenerator
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler
 import com.intellij.psi.PsiElement
@@ -15,7 +16,7 @@ class LineMarkerTests : BasePlatformTestCase() {
     override fun getTestDataPath() = "src/test/testData/"
 
     val generator = PostmanRequestGenerator()
-    val provider = JsonGeneratorLineMarkerProvider(generator)
+    val provider = JavaLineMarkerProvider(generator)
 
     fun testMouseEvent() {
         myFixture.configureByFiles(
