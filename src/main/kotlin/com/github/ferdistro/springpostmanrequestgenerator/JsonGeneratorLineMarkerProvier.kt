@@ -11,28 +11,38 @@ import com.intellij.psi.PsiTypeElement
 import java.awt.event.MouseEvent
 import javax.swing.Icon
 
-private const val ANNOTATION_NAME = "org.springframework.web.bind.annotation.RequestMapping"
-
 class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
     private val icon: Icon = IconLoader.getIcon("/META-INF/icon.svg", JsonGeneratorLineMarkerProvider::class.java)
     private val baseUrl: String = "{{PROTOCOL}}{{SERVER}}"
     private val appContext: String = "{{APP_CONTEXT}}"
 
-    override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
-        if (element is PsiMethod && element.hasAnnotation(ANNOTATION_NAME)) {
-            val anchor = element.modifierList.nextSibling ?: element
-            val finalAnchor = anchor as? PsiTypeElement ?: (element.nameIdentifier ?: element)
+    private val extractors: List<AnnotationExtractor> = listOf(
+        RequestMappingAnnotationExtractor(),
+    )
 
-            return LineMarkerInfo(
-                /* element = */ finalAnchor,
-                /* range = */ finalAnchor.textRange,
-                /* icon = */ icon,
-                /* tooltipProvider = */ { "Generate JSON" },
-                /* navHandler = */ { _: MouseEvent?, _ -> generateJson(element) },
-                /* alignment = */ GutterIconRenderer.Alignment.RIGHT,
-                /* accessibleNameProvider = */ { "Generate JSON" })
-        }
-        return null
+    private val annotationQualifiedFieldsNames = extractors
+        .map { it.annotationQualifiedName }
+        .toSet()
+
+    override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
+        if (element !is PsiMethod) return null
+
+        val hasAnnotation = annotationQualifiedFieldsNames
+            .any { element.hasAnnotation(it) }
+
+        if (!hasAnnotation) return null
+
+        val anchor = element.modifierList.nextSibling ?: element
+        val finalAnchor = anchor as? PsiTypeElement ?: (element.nameIdentifier ?: element)
+
+        return LineMarkerInfo(
+            /* element = */ finalAnchor,
+            /* range = */ finalAnchor.textRange,
+            /* icon = */ icon,
+            /* tooltipProvider = */ { "Generate JSON" },
+            /* navHandler = */ { _: MouseEvent?, _: Any? -> generateJson(element) },
+            /* alignment = */ GutterIconRenderer.Alignment.RIGHT,
+            /* accessibleNameProvider = */ { "Generate JSON" })
     }
 
     private fun generateJson(method: PsiMethod) {
@@ -57,7 +67,9 @@ class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
             }
         }
 
-        val annotationData = extractAnnotationData(method, stringBuilder)
+        val annotationData = extractors
+            .firstNotNullOfOrNull { it.extractAnnotationData(method, stringBuilder) }
+            ?: throw IllegalStateException("No annotation data found")
 
         val urlComponents = buildUrlComponents(annotationData.path, queryItems)
 
@@ -76,22 +88,56 @@ class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
         service.addRequest(item)
     }
 
-    private data class AnnotationData(
-        val name: String,
-        val method: String,
-        val path: String
-    ) {
-        companion object {
-            val EMPTY = AnnotationData("", "", "")
+    private fun buildUrlComponents(
+        path: String,
+        queryItems: List<QueryItem>
+    ): URL {
+        val rawUrl = if (path.isNotEmpty()) {
+            ("$baseUrl/$appContext$path").replace("\"", "")
+        } else {
+            ("$baseUrl/$appContext").replace("\"", "")
         }
-    }
 
-    private fun extractAnnotationData(
+        val pathComponents = if (path.isNotEmpty()) {
+            listOf(appContext) + path.replace("\"", "").split("/").drop(1)
+        } else {
+            listOf(appContext)
+        }
+
+        return URL(
+            raw = rawUrl,
+            host = listOf(baseUrl),
+            path = pathComponents,
+            query = queryItems
+        )
+    }
+}
+
+data class AnnotationData(
+    val name: String,
+    val method: String,
+    val path: String
+)
+
+abstract class AnnotationExtractor(
+    val annotationQualifiedName: String
+) {
+    abstract fun extractAnnotationData(
         method: PsiMethod,
         stringBuilder: StringBuilder
-    ): AnnotationData {
-        val annotation = method.modifierList.findAnnotation(ANNOTATION_NAME)
-            ?: return AnnotationData.EMPTY
+    ): AnnotationData?
+}
+
+
+class RequestMappingAnnotationExtractor : AnnotationExtractor(
+    annotationQualifiedName = "org.springframework.web.bind.annotation.RequestMapping"
+) {
+    override fun extractAnnotationData(
+        method: PsiMethod,
+        stringBuilder: StringBuilder
+    ): AnnotationData? {
+        val annotation = method.modifierList.findAnnotation(annotationQualifiedName)
+            ?: return null
 
         var name = ""
         var method = ""
@@ -117,29 +163,5 @@ class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
         }
 
         return AnnotationData(name, method, path)
-    }
-
-    private fun buildUrlComponents(
-        path: String,
-        queryItems: List<QueryItem>
-    ): URL {
-        val rawUrl = if (path.isNotEmpty()) {
-            ("$baseUrl/$appContext$path").replace("\"", "")
-        } else {
-            ("$baseUrl/$appContext").replace("\"", "")
-        }
-
-        val pathComponents = if (path.isNotEmpty()) {
-            listOf(appContext) + path.replace("\"", "").split("/").drop(1)
-        } else {
-            listOf(appContext)
-        }
-
-        return URL(
-            raw = rawUrl,
-            host = listOf(baseUrl),
-            path = pathComponents,
-            query = queryItems
-        )
     }
 }
