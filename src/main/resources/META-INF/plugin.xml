@@ -9,6 +9,9 @@
     <extensions defaultExtensionNs="com.intellij">
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.github.ferdistro.springpostmanrequestgenerator.JsonGeneratorLineMarkerProvider"/>
     </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <codeInsight.lineMarkerProvider language="KOTLIN" implementationClass="com.github.ferdistro.springpostmanrequestgenerator.JsonGeneratorLineMarkerProvider"/>
+    </extensions>
     <extensions defaultExtensionNs="org.jetbrains.kotlin">
         <supportsKotlinPluginMode supportsK1="true" supportsK2="true" />
     </extensions>
