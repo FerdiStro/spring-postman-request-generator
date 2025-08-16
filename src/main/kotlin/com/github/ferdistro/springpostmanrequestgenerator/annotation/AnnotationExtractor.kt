@@ -1,14 +1,14 @@
 package com.github.ferdistro.springpostmanrequestgenerator.annotation
 
+import com.github.ferdistro.springpostmanrequestgenerator.AnnotationInfo
+import com.github.ferdistro.springpostmanrequestgenerator.MethodInfo
 import com.intellij.psi.PsiAnnotation
-import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiNameValuePair
 
 abstract class AnnotationExtractor(
     val annotationQualifiedName: String
 ) {
-    abstract fun extractAnnotationData(method: PsiMethod): AnnotationData?
-
+    abstract fun extractAnnotationData(method: MethodInfo): AnnotationData?
 
     protected fun sanitizeValue(value: String): String {
         return value.replace("\"", "")
@@ -22,8 +22,8 @@ abstract class AnnotationExtractor(
         return methodValue.split(".").getOrNull(1)?.replace("\"", "") ?: ""
     }
 
-    protected fun findAnnotation(method: PsiMethod): PsiAnnotation? {
-        return method.modifierList.findAnnotation(annotationQualifiedName)
+    protected fun findAnnotation(method: MethodInfo): AnnotationInfo? {
+        return method.annotations.singleOrNull { it.qualifiedName == annotationQualifiedName }
     }
 
     protected fun extractAttributes(annotation: PsiAnnotation): Map<String, String> {
@@ -43,7 +43,7 @@ abstract class AnnotationExtractor(
         }.orEmpty()
     }
 
-    companion object{
+    companion object {
         protected const val VALUE_ATTRIBUTE = "value"
         protected const val METHOD_ATTRIBUTE = "method"
     }

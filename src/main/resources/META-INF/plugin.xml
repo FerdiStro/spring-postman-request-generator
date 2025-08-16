@@ -1,13 +1,13 @@
 <idea-plugin>
-    <id>com.github.ferdistro.springpostmanrequestgenerator</id>
+    <id>sprg</id>
     <name>Generate Spring Postman requests</name>
     <vendor>alex_let</vendor>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
 
-    <depends optional="true" config-file="plugin-java.xml">com.intellij.java</depends>
-    <depends optional="true" config-file="plugin-kotlin.xml">org.jetbrains.kotlin</depends>
+    <depends optional="true" config-file="sprg-java.xml">com.intellij.java</depends>
+    <depends optional="true" config-file="sprg-kotlin.xml">org.jetbrains.kotlin</depends>
 
     <extensionPoints>
         <extensionPoint name="postmanLineMarkerProvider"
