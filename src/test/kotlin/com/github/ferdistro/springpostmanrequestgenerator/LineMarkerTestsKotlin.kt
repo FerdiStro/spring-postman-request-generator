@@ -1,14 +1,10 @@
-/*
 package com.github.ferdistro.springpostmanrequestgenerator
 
+import com.github.ferdistro.springpostmanrequestgenerator.line.KotlinLineMarkerProvider
 import com.github.ferdistro.springpostmanrequestgenerator.services.PostmanRequestGenerator
-import com.intellij.codeInsight.daemon.GutterIconNavigationHandler
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiMethod
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import java.awt.event.MouseEvent
+import org.jetbrains.kotlin.psi.KtFile
 
 @TestDataPath($$"$CONTENT_ROOT/src/test/testData")
 class LineMarkerTestsKotlin : BasePlatformTestCase() {
@@ -16,8 +12,30 @@ class LineMarkerTestsKotlin : BasePlatformTestCase() {
     override fun getTestDataPath() = "src/test/testData/"
 
     val generator = PostmanRequestGenerator()
-    val provider = JsonGeneratorLineMarkerProvider(generator)
+    val provider = KotlinLineMarkerProvider(generator)
 
+    fun testFile(){
+        myFixture.configureByFiles(
+            "TestControllerKt.kt",
+            "org/springframework/web/bind/annotation/RequestMapping.java"
+        )
+
+        val file = myFixture.file
+
+        check(file is KtFile)
+        file.classes.forEach { claz ->
+            println("--------------------------")
+            println("claz ${claz.name}:")
+            claz.methods.forEach { method ->
+                println("------")
+                println(method.name)
+                println(method.annotations.map { it.resolveAnnotationType()?.qualifiedName })
+            }
+        }
+        println(file)
+    }
+
+    /*
     fun testMouseEvent() {
         myFixture.configureByFiles(
             "TestControllerKt.kt",
@@ -47,11 +65,11 @@ class LineMarkerTestsKotlin : BasePlatformTestCase() {
         )
 
         val handler = markerInfo.navigationHandler as GutterIconNavigationHandler<PsiElement>
-//        handler.navigate(fakeEvent, element)
-    }
+        handler.navigate(fakeEvent, element)
+    }*/
 
 
-    fun testLineMarkerInfo() {
+/*    fun testLineMarkerInfo() {
         myFixture.configureByFiles(
             "TestControllerKt.kt",
             "org/springframework/web/bind/annotation/RequestMapping.java"
@@ -74,6 +92,5 @@ class LineMarkerTestsKotlin : BasePlatformTestCase() {
 
         val normalMarkerInfo = provider.getLineMarkerInfo(normalMethod)
         assertNull("LineMarker shouldn't be created", normalMarkerInfo)
-    }
+    }*/
 }
-*/
