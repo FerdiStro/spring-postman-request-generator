@@ -10,6 +10,7 @@ import com.github.ferdistro.springpostmanrequestgenerator.postman.PostmanCollect
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx
@@ -165,6 +166,8 @@ class PermanentCache(private val project: Project) {
             }
         } catch (e: Exception) {
             LOG.warn("Failed to scroll to item: ${item.name}", e)
+        } finally {
+            EditorFactory.getInstance().releaseEditor(editor)
         }
     }
 
