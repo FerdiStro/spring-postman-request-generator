@@ -1,31 +1,27 @@
 package com.github.ferdistro.springpostmanrequestgenerator
 
+import com.github.ferdistro.springpostmanrequestgenerator.services.PostmanRequestGenerator
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler
-import com.intellij.codeInsight.daemon.LineMarkerInfo
-import com.intellij.codeInsight.hints.presentation.mouseButton
-import com.intellij.codeInsight.navigation.NavigationGutterIconRenderer
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import java.awt.event.MouseEvent
-import java.nio.channels.spi.AsynchronousChannelProvider.provider
 
-
-@TestDataPath("\$CONTENT_ROOT/src/test/testData")
+@TestDataPath($$"$CONTENT_ROOT/src/test/testData")
 class LineMarkerTests : BasePlatformTestCase() {
 
     override fun getTestDataPath() = "src/test/testData/"
 
+    val generator = PostmanRequestGenerator()
+    val provider = JsonGeneratorLineMarkerProvider(generator)
 
     fun testMouseEvent() {
         myFixture.configureByFiles(
             "TestController.java",
             "org/springframework/web/bind/annotation/RequestMapping.java"
         )
-
-        val provider = JsonGeneratorLineMarkerProvider()
 
         val annotatedMethod = PsiTreeUtil.findChildrenOfType(myFixture.file, PsiMethod::class.java)
             .first()
@@ -57,7 +53,6 @@ class LineMarkerTests : BasePlatformTestCase() {
         myFixture.configureByFiles(
             "TestController.java", "org/springframework/web/bind/annotation/RequestMapping.java"
         )
-        val provider = JsonGeneratorLineMarkerProvider()
 
         val methods = PsiTreeUtil.findChildrenOfType(myFixture.file, PsiMethod::class.java).toList()
 
@@ -73,12 +68,7 @@ class LineMarkerTests : BasePlatformTestCase() {
             !it.hasAnnotation("org.springframework.web.bind.annotation.RequestMapping")
         }
 
-
         val normalMarkerInfo = provider.getLineMarkerInfo(normalMethod)
         assertNull("LineMarker shouldn't be created", normalMarkerInfo)
-
-
     }
-
-
 }
