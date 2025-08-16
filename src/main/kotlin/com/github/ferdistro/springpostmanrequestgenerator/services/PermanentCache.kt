@@ -2,9 +2,9 @@ package com.github.ferdistro.springpostmanrequestgenerator.services
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.github.ferdistro.springpostmanrequestgenerator.Info
-import com.github.ferdistro.springpostmanrequestgenerator.Item
-import com.github.ferdistro.springpostmanrequestgenerator.PostmanCollection
+import com.github.ferdistro.springpostmanrequestgenerator.postman.Info
+import com.github.ferdistro.springpostmanrequestgenerator.postman.Item
+import com.github.ferdistro.springpostmanrequestgenerator.postman.PostmanCollection
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.ScrollType
@@ -19,14 +19,13 @@ import javax.swing.SwingConstants
 @Service(Service.Level.PROJECT)
 class PermanentCache(private val project: Project) {
 
-
     private val mapper = jacksonObjectMapper().registerKotlinModule()
     private val file = File("${project.basePath}/generated-request.json")
 
-
     private fun getDefaultInfo(): Info {
         return Info(
-            name = "Generated Requests", schema = "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+            name = "Generated Requests",
+            schema = "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
         )
     }
 

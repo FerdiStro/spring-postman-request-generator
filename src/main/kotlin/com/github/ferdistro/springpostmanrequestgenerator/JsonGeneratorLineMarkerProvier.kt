@@ -1,14 +1,19 @@
 package com.github.ferdistro.springpostmanrequestgenerator
 
+import com.github.ferdistro.springpostmanrequestgenerator.annotation.AnnotationData
+import com.github.ferdistro.springpostmanrequestgenerator.annotation.AnnotationExtractor
+import com.github.ferdistro.springpostmanrequestgenerator.annotation.RequestMappingAnnotationExtractor
+import com.github.ferdistro.springpostmanrequestgenerator.postman.Item
+import com.github.ferdistro.springpostmanrequestgenerator.postman.QueryItem
+import com.github.ferdistro.springpostmanrequestgenerator.postman.Request
+import com.github.ferdistro.springpostmanrequestgenerator.postman.URL
 import com.github.ferdistro.springpostmanrequestgenerator.services.PermanentCache
 import com.intellij.codeInsight.daemon.LineMarkerInfo
 import com.intellij.codeInsight.daemon.LineMarkerProvider
 import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.openapi.util.IconLoader
-import com.intellij.psi.PsiAnnotation
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiNameValuePair
 import com.intellij.psi.PsiTypeElement
 import java.awt.event.MouseEvent
 import javax.swing.Icon
@@ -114,77 +119,3 @@ class JsonGeneratorLineMarkerProvider : LineMarkerProvider {
     }
 }
 
-data class AnnotationData(
-    val name: String,
-    val method: String,
-    val path: String
-)
-
-abstract class AnnotationExtractor(
-    val annotationQualifiedName: String
-) {
-    abstract fun extractAnnotationData(method: PsiMethod): AnnotationData?
-
-
-    protected fun sanitizeValue(value: String): String {
-        return value.replace("\"", "")
-    }
-
-    protected fun extractNameFromPath(path: String): String {
-        return path.split("/").lastOrNull()?.takeIf { it.isNotEmpty() } ?: ""
-    }
-
-    protected fun extractHttpMethod(methodValue: String): String {
-        return methodValue.split(".").getOrNull(1)?.replace("\"", "") ?: ""
-    }
-
-    protected fun findAnnotation(method: PsiMethod): PsiAnnotation? {
-        return method.modifierList.findAnnotation(annotationQualifiedName)
-    }
-
-    protected fun extractAttributes(annotation: PsiAnnotation): Map<String, String> {
-        return annotation.parameterList.attributes.associate { attr ->
-            val attrName = attr.name ?: VALUE_ATTRIBUTE
-            val attrValue = extractAttributeValue(attr)
-            attrName to attrValue
-        }
-    }
-
-    protected fun extractAttributeValue(attribute: PsiNameValuePair): String {
-        return attribute.value?.let { value ->
-            when {
-                attribute.name == METHOD_ATTRIBUTE -> extractHttpMethod(value.text)
-                else -> sanitizeValue(value.text)
-            }
-        }.orEmpty()
-    }
-
-    companion object{
-        protected const val VALUE_ATTRIBUTE = "value"
-        protected const val METHOD_ATTRIBUTE = "method"
-    }
-}
-
-class RequestMappingAnnotationExtractor : AnnotationExtractor(
-    annotationQualifiedName = "org.springframework.web.bind.annotation.RequestMapping"
-) {
-
-    companion object {
-        private const val DEFAULT_HTTP_METHOD = "GET"
-    }
-
-    override fun extractAnnotationData(method: PsiMethod): AnnotationData? {
-        val annotation = findAnnotation(method) ?: return null
-
-        val attributes = extractAttributes(annotation)
-        val path = attributes[AnnotationExtractor.VALUE_ATTRIBUTE].orEmpty()
-        val httpMethod = attributes[AnnotationExtractor.METHOD_ATTRIBUTE].orEmpty()
-
-        return AnnotationData(
-            name = extractNameFromPath(path).ifEmpty { method.name },
-            method = httpMethod.ifEmpty { DEFAULT_HTTP_METHOD },
-            path = path
-        )
-    }
-
-}

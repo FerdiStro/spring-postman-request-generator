@@ -1,4 +1,4 @@
-package com.github.ferdistro.springpostmanrequestgenerator
+package com.github.ferdistro.springpostmanrequestgenerator.postman
 
 data class PostmanCollection(
     var info: Info?,
