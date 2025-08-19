@@ -35,9 +35,8 @@ dependencies {
     testImplementation(libs.opentest4j)
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.2")
-
-
-
+    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
+    implementation("org.jdesktop.swingx:jxmapviewer2:1.3.1")
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
         create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
