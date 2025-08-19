@@ -77,6 +77,7 @@ Java classes using `@RequestMapping` annotations.
 
 * Only methods annotated with Spring Web annotation  `@RequestMapping` is currently supported.
 * The plugin is designed for use with Spring projects inside IntelliJ IDEA.
+* Plugin is in development, so maybe it will not work as expected
 
 ---
 
