@@ -1,0 +1,5 @@
+package com.github.ferdistro.springpostmanrequestgenerator.line
+
+import com.intellij.codeInsight.daemon.LineMarkerProvider
+
+interface PostmanLineMarkerProvider: LineMarkerProvider
