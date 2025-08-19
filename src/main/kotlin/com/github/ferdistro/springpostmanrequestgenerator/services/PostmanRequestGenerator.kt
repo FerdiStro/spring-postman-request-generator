@@ -13,9 +13,6 @@ import com.intellij.psi.PsiMethod
 
 @Service(Service.Level.PROJECT)
 class PostmanRequestGenerator {
-//    private val baseUrl: String = "{{PROTOCOL}}{{SERVER}}"
-//    private val appContext: String = "{{APP_CONTEXT}}"
-
     private fun baseUrl(): String {
         val settings = RequestGeneratorSettings.getInstance()
         val urlBuilder: StringBuilder = StringBuilder()

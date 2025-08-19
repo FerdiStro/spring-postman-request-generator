@@ -1,10 +1,11 @@
 package com.github.ferdistro.springpostmanrequestgenerator.toolwindow
 
 import com.github.ferdistro.springpostmanrequestgenerator.settings.RequestGeneratorSettings
-import com.github.ferdistro.springpostmanrequestgenerator.util.IconHolder
+import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.util.ui.JBUI
+import org.jdesktop.swingx.JXHyperlink
 import java.awt.*
 import javax.swing.*
 
@@ -146,7 +147,6 @@ class ToolWindowContent {
         val panel = JPanel(BorderLayout())
         val headline = JLabel(
             "Spring Postman Request Generator",
-            IconHolder.ICON,
             SwingConstants.CENTER
         )
             .apply {
@@ -156,6 +156,26 @@ class ToolWindowContent {
                 horizontalAlignment = SwingConstants.CENTER
             }
         panel.add(headline, BorderLayout.PAGE_START)
+
+
+
+        val docLabel = JLabel("Check the Toolwindow Documentation for more informations. ")
+        val jxHyperlink = JXHyperlink().apply {
+            text = "Documentation"
+            toolTipText = "Open online documentation"
+            clickedColor = Color(128, 0, 128)
+            addActionListener {
+                BrowserUtil.browse("https://github.com/FerdiStro/spring-postman-request-generator/tree/main/doc/Toolwindow.md")
+            }
+        }
+        val innerPanel = JPanel(FlowLayout(FlowLayout.LEFT)).apply {
+            add(docLabel)
+            add(jxHyperlink)
+        }
+
+
+        panel.add(innerPanel, BorderLayout.CENTER)
+
         return panel
     }
 }

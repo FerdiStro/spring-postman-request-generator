@@ -16,8 +16,11 @@
     </extensionPoints>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.ferdistro.springpostmanrequestgenerator.toolwindow.RequestGeneratorToolWindowFactory" id="RequestGenerator"
-        anchor="right"/>
+        <toolWindow
+                factoryClass="com.github.ferdistro.springpostmanrequestgenerator.toolwindow.RequestGeneratorToolWindowFactory"
+                id="RequestGenerator"
+                icon="/META-INF/icon.svg"
+                anchor="right"/>
     </extensions>
     <extensions defaultExtensionNs="org.jetbrains.kotlin">
         <supportsKotlinPluginMode supportsK1="true" supportsK2="true"/>
