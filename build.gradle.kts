@@ -36,7 +36,7 @@ dependencies {
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.2")
 
-
+    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
 
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {

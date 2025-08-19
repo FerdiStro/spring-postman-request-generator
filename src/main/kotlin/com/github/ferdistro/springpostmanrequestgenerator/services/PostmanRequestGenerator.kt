@@ -7,13 +7,43 @@ import com.github.ferdistro.springpostmanrequestgenerator.postman.Item
 import com.github.ferdistro.springpostmanrequestgenerator.postman.QueryItem
 import com.github.ferdistro.springpostmanrequestgenerator.postman.Request
 import com.github.ferdistro.springpostmanrequestgenerator.postman.URL
+import com.github.ferdistro.springpostmanrequestgenerator.settings.RequestGeneratorSettings
 import com.intellij.openapi.components.Service
 import com.intellij.psi.PsiMethod
 
 @Service(Service.Level.PROJECT)
 class PostmanRequestGenerator {
-    private val baseUrl: String = "{{PROTOCOL}}{{SERVER}}"
-    private val appContext: String = "{{APP_CONTEXT}}"
+//    private val baseUrl: String = "{{PROTOCOL}}{{SERVER}}"
+//    private val appContext: String = "{{APP_CONTEXT}}"
+
+    private fun baseUrl(): String {
+        val settings = RequestGeneratorSettings.getInstance()
+        val urlBuilder: StringBuilder = StringBuilder()
+        if (settings.state.protocol.useEnv) {
+            urlBuilder.append("{{PROTOCOL}}")
+        }
+        if (!settings.state.protocol.useEnv) {
+            urlBuilder.append(settings.state.protocol.value)
+        }
+
+        if (settings.state.serverUrl.useEnv) {
+            urlBuilder.append("{{SERVER}}")
+        }
+        if (!settings.state.serverUrl.useEnv) {
+            urlBuilder.append(settings.state.serverUrl.value)
+        }
+        return urlBuilder.toString()
+    }
+
+    private fun appContext(): String {
+        val settings = RequestGeneratorSettings.getInstance()
+        if (settings.state.context.extra) return ""
+        if (settings.state.context.useEnv) {
+            return "/{{APP_CONTEXT}}"
+        }
+        return settings.state.context.value
+    }
+
 
     private val extractors: List<AnnotationExtractor> = listOf(
         RequestMappingAnnotationExtractor(),
@@ -60,13 +90,15 @@ class PostmanRequestGenerator {
     }
 
     private fun buildUrlComponents(path: String, queryItems: List<QueryItem>): URL {
+
+
         val sanitizedPath = path.replace("\"", "")
         val rawUrl = buildRawUrl(sanitizedPath)
         val pathComponents = buildPathComponents(sanitizedPath)
 
         return URL(
             raw = rawUrl,
-            host = listOf(baseUrl),
+            host = listOf(baseUrl()),
             path = pathComponents,
             query = queryItems
         )
@@ -75,17 +107,17 @@ class PostmanRequestGenerator {
 
     private fun buildRawUrl(path: String): String {
         return if (path.isNotEmpty()) {
-            "$baseUrl/$appContext$path"
+            "${baseUrl()}${appContext()}$path"
         } else {
-            "$baseUrl/$appContext"
+            "${baseUrl()}${appContext()}"
         }
     }
 
     private fun buildPathComponents(path: String): List<String> {
         return if (path.isNotEmpty()) {
-            listOf(appContext) + path.split("/").filter { it.isNotEmpty() }
+            listOf(appContext()) + path.split("/").filter { it.isNotEmpty() }
         } else {
-            listOf(appContext)
+            listOf(appContext())
         }
     }
 }
