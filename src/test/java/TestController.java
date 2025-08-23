@@ -1,8 +1,12 @@
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 public class TestController {
-    @RequestMapping
-    public void annotated() {}
 
-    public void plain() {}
+    @RequestMapping(path = {"/info"}, method = {RequestMethod.POST})
+    public void annotated() {
+    }
+
+    public void plain() {
+    }
 }

@@ -6,6 +6,7 @@ import com.github.ferdistro.springpostmanrequestgenerator.ParameterInfo
 import com.github.ferdistro.springpostmanrequestgenerator.services.PostmanRequestGenerator
 import com.github.ferdistro.springpostmanrequestgenerator.util.IconHolder
 import com.intellij.codeInsight.daemon.LineMarkerInfo
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.psi.KtNamedFunction
@@ -101,7 +102,10 @@ class KotlinLineMarkerProvider(
         }
     }
 
-    private fun resolveAnnotationName(shortName: String, annotation: org.jetbrains.kotlin.psi.KtAnnotationEntry): String {
+    private fun resolveAnnotationName(
+        shortName: String,
+        annotation: org.jetbrains.kotlin.psi.KtAnnotationEntry
+    ): String {
         // Try to resolve through the containing file's imports
         val containingFile = annotation.containingKtFile
         val imports = containingFile.importDirectives
@@ -141,6 +145,7 @@ class KotlinLineMarkerProvider(
                     // String literal
                     attributes[name] = expression.text.removeSurrounding("\"")
                 }
+
                 expression?.text?.startsWith("arrayOf") == true -> {
                     // Array literal - extract content
                     val arrayContent = expression.text
@@ -150,6 +155,7 @@ class KotlinLineMarkerProvider(
                         .map { it.trim().removeSurrounding("\"") }
                     attributes[name] = arrayContent.toString()
                 }
+
                 expression != null -> {
                     // Other expressions (numbers, constants, etc.)
                     attributes[name] = expression.text

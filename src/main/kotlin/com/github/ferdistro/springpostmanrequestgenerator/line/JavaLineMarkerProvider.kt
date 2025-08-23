@@ -1,16 +1,16 @@
 package com.github.ferdistro.springpostmanrequestgenerator.line
 
 import com.github.ferdistro.springpostmanrequestgenerator.AnnotationInfo
-import com.github.ferdistro.springpostmanrequestgenerator.ParameterInfo
 import com.github.ferdistro.springpostmanrequestgenerator.MethodInfo
+import com.github.ferdistro.springpostmanrequestgenerator.ParameterInfo
 import com.github.ferdistro.springpostmanrequestgenerator.services.PostmanRequestGenerator
 import com.github.ferdistro.springpostmanrequestgenerator.util.IconHolder
 import com.intellij.codeInsight.daemon.LineMarkerInfo
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiTypeElement
-import com.jetbrains.rd.util.qualifiedName
 import java.awt.event.MouseEvent
 
 class JavaLineMarkerProvider(
