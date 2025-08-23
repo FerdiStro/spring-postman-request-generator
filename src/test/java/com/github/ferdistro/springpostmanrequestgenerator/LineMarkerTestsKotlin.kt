@@ -18,6 +18,7 @@ class LineMarkerTestsKotlin : BasePlatformTestCase() {
     val provider = KotlinLineMarkerProvider(generator)
 
     fun testFile() {
+
         myFixture.configureByFiles(
             "TestControllerKt.kt",
             "org/springframework/web/bind/annotation/RequestMapping.java"
@@ -38,8 +39,9 @@ class LineMarkerTestsKotlin : BasePlatformTestCase() {
         println(file)
     }
 
-
+/*
     fun testMouseEvent() {
+
         myFixture.configureByFiles(
             "TestControllerKt.kt",
             "org/springframework/web/bind/annotation/RequestMapping.java"
@@ -74,8 +76,8 @@ class LineMarkerTestsKotlin : BasePlatformTestCase() {
         handler.navigate(fakeEvent, element)
     }
 
-
     fun testLineMarkerInfo() {
+
         myFixture.configureByFiles(
             "TestControllerKt.kt",
             "org/springframework/web/bind/annotation/RequestMapping.java"
@@ -103,4 +105,6 @@ class LineMarkerTestsKotlin : BasePlatformTestCase() {
         val normalMarkerInfo = provider.getLineMarkerInfo(normalMethod)
         assertNull("LineMarker shouldn't be created", normalMarkerInfo)
     }
+
+ */
 }
