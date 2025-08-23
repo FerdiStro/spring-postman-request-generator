@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>sprg</id>
     <name>Generate Spring Postman requests</name>
-    <vendor>alex_let</vendor>
+    <vendor>FerdiStro</vendor>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
