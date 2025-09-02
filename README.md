@@ -5,8 +5,8 @@
 <br>
 
 ![Build](https://github.com/FerdiStro/spring-postman-request-generator/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/27997-spring-postman-request-generator)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/27997-spring-postman-request-generator)
+[![Version](https://img.shields.io/jetbrains/plugin/v/27997-spring-postman-request-generator.svg)](https://plugins.jetbrains.com/plugin/27997-spring-postman-request-generator)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/27997-spring-postman-request-generator.svg)](https://plugins.jetbrains.com/plugin/27997-spring-postman-request-generator)
 
 A JetBrains IntelliJ plugin that automatically generates [Postman](https://www.postman.com/) collections from Spring
 Java classes using `@RequestMapping` annotations.
