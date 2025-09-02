@@ -98,6 +98,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ---
 # Plugin Description
 <!-- Plugin description -->
+**IMPORTANT: Currently under development - functionality still limited and partially buggy. Feel free to contribute and improve the plugin.**
+
 Generate Postman collections directly from your Spring controllers without leaving IntelliJ IDEA.  
 This plugin adds a convenient gutter icon next to methods annotated with `@RequestMapping`.  
 With a single click, it creates a ready-to-use Postman collection (`generated-request.json`) in your project root.
@@ -109,4 +111,8 @@ With a single click, it creates a ready-to-use Postman collection (`generated-re
 - Simplifies testing and documentation of your REST endpoints
 
 Perfect for developers who want to quickly test their Spring APIs in Postman without manually creating requests.
+
+
+
+
 <!-- Plugin description end -->
