@@ -166,8 +166,6 @@ class PermanentCache(private val project: Project) {
             }
         } catch (e: Exception) {
             LOG.warn("Failed to scroll to item: ${item.name}", e)
-        } finally {
-            EditorFactory.getInstance().releaseEditor(editor)
         }
     }
 
