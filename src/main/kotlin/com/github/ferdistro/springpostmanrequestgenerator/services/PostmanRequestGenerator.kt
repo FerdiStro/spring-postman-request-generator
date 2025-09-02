@@ -1,5 +1,6 @@
 package com.github.ferdistro.springpostmanrequestgenerator.services
 
+import com.github.ferdistro.springpostmanrequestgenerator.MethodInfo
 import com.github.ferdistro.springpostmanrequestgenerator.annotation.AnnotationData
 import com.github.ferdistro.springpostmanrequestgenerator.annotation.AnnotationExtractor
 import com.github.ferdistro.springpostmanrequestgenerator.annotation.RequestMappingAnnotationExtractor
@@ -9,7 +10,6 @@ import com.github.ferdistro.springpostmanrequestgenerator.postman.Request
 import com.github.ferdistro.springpostmanrequestgenerator.postman.URL
 import com.github.ferdistro.springpostmanrequestgenerator.settings.RequestGeneratorSettings
 import com.intellij.openapi.components.Service
-import com.intellij.psi.PsiMethod
 
 @Service(Service.Level.PROJECT)
 class PostmanRequestGenerator {
@@ -50,11 +50,13 @@ class PostmanRequestGenerator {
         .map { it.annotationQualifiedName }
         .toSet()
 
-    fun hasSupportedAnnotation(method: PsiMethod): Boolean {
-        return supportedAnnotations.any { method.hasAnnotation(it) }
+    fun hasSupportedAnnotation(method: MethodInfo): Boolean {
+        return supportedAnnotations.any { a ->
+            method.annotations.any { ann -> ann.qualifiedName == a }
+        }
     }
 
-    fun generateJson(method: PsiMethod) {
+    fun generateJson(method: MethodInfo) {
         val queryItems = extractQueryParameters(method)
         val annotationData = extractAnnotationData(method)
         val urlComponents = buildUrlComponents(annotationData.path, queryItems)
@@ -74,16 +76,19 @@ class PostmanRequestGenerator {
     }
 
 
-    private fun extractQueryParameters(method: PsiMethod): List<QueryItem> {
-        return method.parameterList.parameters.map { param ->
+    private fun extractQueryParameters(method: MethodInfo): List<QueryItem> {
+        val parameters = method.parameters
+
+        return parameters.map { param ->
             QueryItem(key = param.name, value = "")
         }
     }
 
-    private fun extractAnnotationData(method: PsiMethod): AnnotationData {
+    private fun extractAnnotationData(method: MethodInfo): AnnotationData {
         return extractors
             .firstNotNullOfOrNull { it.extractAnnotationData(method) }
-            ?: throw IllegalStateException("No supported annotation found on method: ${method.name}")
+            ?: throw IllegalStateException("No supported annotation found on method: $method")
+        //?: throw IllegalStateException("No supported annotation found on method: ${method.name}")
     }
 
     private fun buildUrlComponents(path: String, queryItems: List<QueryItem>): URL {

@@ -6,8 +6,21 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.util.ui.JBUI
 import org.jdesktop.swingx.JXHyperlink
-import java.awt.*
-import javax.swing.*
+import java.awt.BorderLayout
+import java.awt.Color
+import java.awt.FlowLayout
+import java.awt.Font
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import javax.swing.BorderFactory
+import javax.swing.JButton
+import javax.swing.JCheckBox
+import javax.swing.JComboBox
+import javax.swing.JComponent
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JTextField
+import javax.swing.SwingConstants
 
 
 class ToolWindowContent {

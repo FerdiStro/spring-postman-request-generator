@@ -1,19 +1,3 @@
-/*
- * Copyright 2002-present the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.springframework.web.bind.annotation;
 
 import java.lang.annotation.Documented;
@@ -22,65 +6,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.aot.hint.annotation.Reflective;
-import org.springframework.core.annotation.AliasFor;
 
-/**
- * Annotation for mapping web requests onto methods in request-handling classes
- * with flexible method signatures.
- *
- * <p>Both Spring MVC and Spring WebFlux support this annotation through a
- * {@code RequestMappingHandlerMapping} and {@code RequestMappingHandlerAdapter}
- * in their respective modules and package structures. For the exact list of
- * supported handler method arguments and return types in each, please use the
- * reference documentation links below:
- * <ul>
- * <li>Spring MVC
- * <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-ann-arguments">Method Arguments</a>
- * and
- * <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-ann-return-types">Return Values</a>
- * </li>
- * <li>Spring WebFlux
- * <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-ann-arguments">Method Arguments</a>
- * and
- * <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-ann-return-types">Return Values</a>
- * </li>
- * </ul>
- *
- * <p><strong>NOTE:</strong> This annotation can be used both at the class and
- * at the method level. In most cases, at the method level applications will
- * prefer to use one of the HTTP method specific variants
- * {@link GetMapping @GetMapping}, {@link PostMapping @PostMapping},
- * {@link PutMapping @PutMapping}, {@link DeleteMapping @DeleteMapping}, or
- * {@link PatchMapping @PatchMapping}.
- *
- * <p><strong>NOTE:</strong> This annotation cannot be used in conjunction with
- * other {@code @RequestMapping} annotations that are declared on the same element
- * (class, interface, or method). If multiple {@code @RequestMapping} annotations
- * are detected on the same element, a warning will be logged, and only the first
- * mapping will be used. This also applies to composed {@code @RequestMapping}
- * annotations such as {@code @GetMapping}, {@code @PostMapping}, etc.
- *
- * <p><b>NOTE:</b> When using controller interfaces (for example, for AOP proxying),
- * make sure to consistently put <i>all</i> your mapping annotations &mdash; such
- * as {@code @RequestMapping} and {@code @SessionAttributes} &mdash; on
- * the controller <i>interface</i> rather than on the implementation class.
- *
- * @author Juergen Hoeller
- * @author Arjen Poutsma
- * @author Sam Brannen
- * @since 2.5
- * @see GetMapping
- * @see PostMapping
- * @see PutMapping
- * @see DeleteMapping
- * @see PatchMapping
- */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Mapping
-@Reflective(ControllerMappingReflectiveProcessor.class)
 public @interface RequestMapping {
 
     /**
@@ -88,8 +18,6 @@ public @interface RequestMapping {
      * <p><b>Supported at the type level as well as at the method level!</b>
      * When used on both levels, a combined name is derived by concatenation
      * with "#" as separator.
-     * @see org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder
-     * @see org.springframework.web.servlet.handler.HandlerMethodMappingNamingStrategy
      */
     String name() default "";
 
@@ -100,7 +28,7 @@ public @interface RequestMapping {
      * {@code @RequestMapping(path="/profile")}.
      * <p>See {@link #path} for further details.
      */
-    @AliasFor("path")
+    //@AliasFor("path")
     String[] value() default {};
 
     /**
@@ -116,7 +44,7 @@ public @interface RequestMapping {
      * explicitly is effectively mapped to an empty path.
      * @since 4.2
      */
-    @AliasFor("value")
+    //@AliasFor("value")
     String[] path() default {};
 
     /**
@@ -161,7 +89,6 @@ public @interface RequestMapping {
      * <p><b>Supported at the type level as well as at the method level!</b>
      * When used at the type level, all method-level mappings inherit this
      * header restriction.
-     * @see org.springframework.http.MediaType
      */
     String[] headers() default {};
 
@@ -185,8 +112,6 @@ public @interface RequestMapping {
      * <p><b>Supported at the type level as well as at the method level!</b>
      * If specified at both levels, the method level consumes condition overrides
      * the type level condition.
-     * @see org.springframework.http.MediaType
-     * @see jakarta.servlet.http.HttpServletRequest#getContentType()
      */
     String[] consumes() default {};
 
@@ -212,7 +137,6 @@ public @interface RequestMapping {
      * <p><b>Supported at the type level as well as at the method level!</b>
      * If specified at both levels, the method level produces condition overrides
      * the type level condition.
-     * @see org.springframework.http.MediaType
      */
     String[] produces() default {};
 

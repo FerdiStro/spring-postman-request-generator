@@ -10,10 +10,10 @@ import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import java.awt.event.MouseEvent
 
-@TestDataPath($$"$CONTENT_ROOT/src/test/testData")
-class LineMarkerTests : BasePlatformTestCase() {
+@TestDataPath($$"$CONTENT_ROOT/src/test/java")
+class LineMarkerTestsJava : BasePlatformTestCase() {
 
-    override fun getTestDataPath() = "src/test/testData/"
+    override fun getTestDataPath() = "src/test/java/"
 
     val generator = PostmanRequestGenerator()
     val provider = JavaLineMarkerProvider(generator)
@@ -63,8 +63,8 @@ class LineMarkerTests : BasePlatformTestCase() {
         }
 
         val markerInfo = provider.getLineMarkerInfo(annotatedMethod)
-        assertNotNull("Line Marker shout be created", markerInfo)
-        assertEquals("Generate JSON", markerInfo?.lineMarkerTooltip)
+        assertNotNull("Line Marker should be created", markerInfo)
+        assertEquals("Generate postman request", markerInfo?.lineMarkerTooltip)
 
         val normalMethod = methods.first {
             !it.hasAnnotation("org.springframework.web.bind.annotation.RequestMapping")

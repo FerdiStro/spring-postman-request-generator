@@ -2,6 +2,7 @@
 .intellijPlatform
 .qodana
 build
+**/generated-request.json
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
