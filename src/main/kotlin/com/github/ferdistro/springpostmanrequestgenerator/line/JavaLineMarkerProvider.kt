@@ -11,6 +11,8 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiTypeElement
+import com.intellij.psi.impl.source.tree.java.PsiNameValuePairImpl
+import org.jetbrains.kotlin.asJava.unwrapped
 import java.awt.event.MouseEvent
 
 class JavaLineMarkerProvider(
@@ -25,15 +27,24 @@ class JavaLineMarkerProvider(
     @Suppress("UNUSED")
     constructor() : this(PostmanRequestGenerator())
 
-    override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<PsiElement>? {
-        //logger.warn("getLineMarkerInfo() called with: element = $element")
-        if (element !is PsiMethod) return null
 
+    override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<PsiElement>? {
+        if (element !is PsiMethod) return null
         val annotationInfo = element.annotations
-            .map {
+            .map { it ->
                 AnnotationInfo(
                     qualifiedName = it.qualifiedName!!,
-                    attributes = mapOf(),
+                    attributes = it.attributes.mapNotNull { attribute ->
+
+                        val name = attribute.attributeName
+
+                        var value = when (val expr = attribute) {
+                            is PsiNameValuePairImpl -> expr.value?.unwrapped?.text ?: ""
+                            else -> ""
+                        }
+                        value = value.replace("\"", "")
+                        value.let { v -> name to v }
+                    }.toMap()
                 )
             }
 

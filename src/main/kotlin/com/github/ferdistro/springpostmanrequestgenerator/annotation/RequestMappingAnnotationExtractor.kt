@@ -15,7 +15,7 @@ class RequestMappingAnnotationExtractor : AnnotationExtractor(
 
         val attributes = annotation.attributes
         val path = attributes[VALUE_ATTRIBUTE].orEmpty()
-        val httpMethod = attributes[METHOD_ATTRIBUTE].orEmpty()
+        val httpMethod = mapHttpMethode(attributes[METHOD_ATTRIBUTE].orEmpty())
         val methodName = method.name
 
         return AnnotationData(
@@ -23,6 +23,10 @@ class RequestMappingAnnotationExtractor : AnnotationExtractor(
             method = httpMethod.ifEmpty { DEFAULT_HTTP_METHOD },
             path = path
         )
+    }
+
+    private fun mapHttpMethode(methodeString : String): String {
+        return methodeString.split(".").getOrNull(1) ?: ""
     }
 
 }

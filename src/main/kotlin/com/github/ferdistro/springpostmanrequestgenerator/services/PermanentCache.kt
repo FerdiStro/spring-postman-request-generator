@@ -171,7 +171,7 @@ class PermanentCache(private val project: Project) {
 
     private fun findItemLineNumber(content: String, item: Item): Int {
         val lines = content.lines()
-        val targetPattern = "\"name\" : \"${escapeForRegex(item.name)}\""
+        val targetPattern = "\"name\" : \"${item.name}\","
 
         for (i in lines.indices.reversed()) {
             if (lines[i].contains(targetPattern)) {
