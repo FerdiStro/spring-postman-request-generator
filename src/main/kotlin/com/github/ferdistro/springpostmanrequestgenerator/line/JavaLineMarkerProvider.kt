@@ -48,12 +48,10 @@ class JavaLineMarkerProvider(
                 )
             }
 
-        val params = element
-            .parameters.map {
-                ParameterInfo(
-                    it.name!!
-                )
-            }
+
+        val params = element.parameterList.parameters.map {
+            ParameterInfo(it.name)
+        }
 
         val methodInfo = MethodInfo(
             name = element.name,
@@ -71,6 +69,8 @@ class JavaLineMarkerProvider(
             //postmanRequestGenerator.generateJson(param)
             postmanRequestGenerator.generateJson(methodInfo)
         }
+
+
 
         return LineMarkerInfo(
             /* element = */ anchor,
