@@ -98,7 +98,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ---
 # Plugin Description
 <!-- Plugin description -->
-**IMPORTANT: Currently under development - functionality still limited and partially buggy. Feel free to contribute and improve the plugin.**
+**IMPORTANT: Currently under development—functionality still limited and partially buggy. Feel free to contribute and improve the plugin.**
 
 Generate Postman collections directly from your Spring controllers without leaving IntelliJ IDEA.  
 This plugin adds a convenient gutter icon next to methods annotated with `@RequestMapping`.  
