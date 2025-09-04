@@ -167,6 +167,12 @@ class PermanentCache(private val project: Project) {
         } catch (e: Exception) {
             LOG.warn("Failed to scroll to item: ${item.name}", e)
         }
+        finally {
+            // Only release editor in unit test mode. In normal IDE mode the editor is owned by IDE and must not be released.
+            if (ApplicationManager.getApplication().isUnitTestMode) {
+                EditorFactory.getInstance().releaseEditor(editor)
+            }
+        }
     }
 
     private fun findItemLineNumber(content: String, item: Item): Int {

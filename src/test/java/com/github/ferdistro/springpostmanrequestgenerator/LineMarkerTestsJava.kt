@@ -10,7 +10,7 @@ import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import java.awt.event.MouseEvent
 
-@TestDataPath($$"$CONTENT_ROOT/src/test/java")
+@TestDataPath("\$CONTENT_ROOT/src/test/java")
 class LineMarkerTestsJava : BasePlatformTestCase() {
 
     override fun getTestDataPath() = "src/test/java/"
