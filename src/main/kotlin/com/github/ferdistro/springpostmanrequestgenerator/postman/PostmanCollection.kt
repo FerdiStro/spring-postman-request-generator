@@ -1,9 +1,13 @@
 package com.github.ferdistro.springpostmanrequestgenerator.postman
 
 data class PostmanCollection(
+    var collection: Collection?
+)
+data class Collection(
     var info: Info?,
     var item: List<Item>?
 )
+
 
 data class Info(
     val name: String,

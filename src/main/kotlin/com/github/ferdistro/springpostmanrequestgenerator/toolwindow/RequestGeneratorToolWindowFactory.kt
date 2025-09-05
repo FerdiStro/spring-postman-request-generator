@@ -10,12 +10,8 @@ class RequestGeneratorToolWindowFactory : ToolWindowFactory, DumbAware {
 
 
     @Override
-    override fun createToolWindowContent(
-        project: Project,
-        toolWindow: ToolWindow) {
-
-        val windowContent = ToolWindowContent(toolWindow)
-        val content = ContentFactory.getInstance().createContent(windowContent.getContent(), "", false)
+    override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+        val content = ContentFactory.getInstance().createContent(ToolWindowContent().createPanel(), "", false)
         toolWindow.contentManager.addContent(content)
     }
 }
