@@ -14,7 +14,7 @@ class EditContextSectionPanelFactory : PanelFactory() {
 
 
     override fun panelStart(): JPanel {
-        return defaultHeader("Edit Context Section")
+        return defaultHeader("Context Settings")
     }
 
     override fun panelName(): String {

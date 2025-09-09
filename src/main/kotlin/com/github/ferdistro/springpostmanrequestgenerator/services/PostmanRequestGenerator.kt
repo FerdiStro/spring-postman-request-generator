@@ -69,8 +69,7 @@ class PostmanRequestGenerator {
         service.addRequest(item)
 
         if (RequestGeneratorSettings.getInstance().state.apiActive) {
-            val success = ConnectToPostmanApi(service).postCollection();
-            println()
+            ConnectToPostmanApi(service).postCollection();
         }
 
     }

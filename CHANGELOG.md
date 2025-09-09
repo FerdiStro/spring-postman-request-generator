@@ -10,7 +10,7 @@ Changelog starts on version 0.5.0
 ### Added
 
 - pipeline rollout to JETBRAINS-Marketplace
-- postman api connection. If user defined API-Token  generate and push to postman
+- Edit Mapping Section
 ### Changed
 
 -
@@ -19,7 +19,7 @@ Changelog starts on version 0.5.0
 
 -
 
-## [0.6.0] - 
+## [0.6.0] - 2025-09-09
 
 ### Added 
 
@@ -27,7 +27,7 @@ Changelog starts on version 0.5.0
 - Toolwindow section for API-TOKEN and POST-options (Postman-API)
 - DOC for setting up and using new feature
 
-## [0.5.0] - 2025-09.04
+## [0.5.0] - 2025-09-04
 
 ### Added
 

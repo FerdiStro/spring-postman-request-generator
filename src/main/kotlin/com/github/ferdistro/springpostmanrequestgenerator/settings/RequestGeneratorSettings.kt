@@ -13,6 +13,7 @@ import jakarta.xml.bind.annotation.XmlAccessType
 import jakarta.xml.bind.annotation.XmlAccessorType
 import jakarta.xml.bind.annotation.XmlElement
 import jakarta.xml.bind.annotation.XmlRootElement
+import kotlin.concurrent.thread
 
 
 @Service
@@ -55,7 +56,11 @@ class RequestGeneratorSettings : PersistentStateComponent<RequestGeneratorSettin
         fun saveApiToken(token: String) {
             val credentialAttributes = CredentialAttributes(CREDENTIAL_KEY)
             val credentials = Credentials("user", token)
-            PasswordSafe.instance.set(credentialAttributes, credentials)
+            thread {
+                PasswordSafe.instance.set(credentialAttributes, credentials)
+
+
+            }
         }
 
         fun loadApiToken(): String? {

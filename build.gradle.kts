@@ -1,7 +1,6 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
-import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask
 
 plugins {
     id("java")
@@ -39,7 +38,7 @@ dependencies {
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
     implementation("org.jdesktop.swingx:jxmapviewer2:1.3.1")
 
-
+    implementation("org.json:json:20250517")
     implementation("org.reflections:reflections:0.10.2")
 
 

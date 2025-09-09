@@ -92,7 +92,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 * [ ] Support all Spring annotations (e.g., `@GetMapping`, `@PostMapping`, etc.)
 * [ ] Set up CI/CD pipeline
-* [ ] Publish to JetBrains Marketplace
 * [ ] Add configuration window for plugin settings
 
 ---
@@ -104,11 +103,12 @@ Generate Postman collections directly from your Spring controllers without leavi
 This plugin adds a convenient gutter icon next to methods annotated with `@RequestMapping`.  
 With a single click, it creates a ready-to-use Postman collection (`generated-request.json`) in your project root.
 
+Also, when a Postman API token is provided, the latest collection is automatically published to Postman via the Postman API.
+
 **Features:**
 - One‑click Postman collection generation from Spring `@RequestMapping` methods
-- Seamless integration into the IntelliJ editor (gutter icon navigation)
-- Exports valid Postman JSON collections ready for import
-- Simplifies testing and documentation of your REST endpoints
+- Connection to Postman via Postman-API 
+- Toolwindow with Settings for personal generation
 
 Perfect for developers who want to quickly test their Spring APIs in Postman without manually creating requests.
 

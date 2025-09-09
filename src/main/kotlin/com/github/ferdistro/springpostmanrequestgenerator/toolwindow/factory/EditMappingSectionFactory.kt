@@ -3,8 +3,9 @@ package com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory
 import javax.swing.JPanel
 
 class EditMappingSectionFactory : PanelFactory() {
+
     override fun panelStart(): JPanel {
-        return defaultHeader("Edit Mapping Section")
+        return defaultHeader("Mapping Settings")
     }
 
     override fun panelName(): String {

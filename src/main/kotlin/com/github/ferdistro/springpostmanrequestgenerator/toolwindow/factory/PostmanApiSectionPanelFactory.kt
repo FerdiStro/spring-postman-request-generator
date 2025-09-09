@@ -1,16 +1,21 @@
 package com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory
 
+import com.github.ferdistro.springpostmanrequestgenerator.services.ConnectToPostmanApi
 import com.github.ferdistro.springpostmanrequestgenerator.settings.RequestGeneratorSettings
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.ui.Messages
 import com.intellij.util.ui.JBUI
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import javax.swing.*
 
+private const val DESCRIPTION_TEXT =
+    "Enter your Postman API-Token to directly upload and update the generated collection to your default Postman workspace."
+private const val DUMMY_STRING: String = "PMAK-XXXXXXXXXX-XXXXXXXXXXXXX"
+
+
 class PostmanApiSectionPanelFactory : PanelFactory() {
-    val DESCRIPTION_TEXT =
-        "Enter your Postman API-Token to directly POST the generated collection to your default Postman workspace."
-    val DUMMY_STRING: String = "PMAK-XXXXXXXXXX-XXXXXXXXXXXXX"
+
 
     val dummy = if (!RequestGeneratorSettings.loadApiToken().isNullOrEmpty()) DUMMY_STRING else ""
     val apiToken = JPasswordField(dummy)
@@ -27,7 +32,7 @@ class PostmanApiSectionPanelFactory : PanelFactory() {
 
 
     override fun panelStart(): JPanel {
-        return defaultHeader("Postman API Section")
+        return defaultHeader("Postman API Settings")
     }
 
     override fun panelName(): String {
@@ -40,12 +45,19 @@ class PostmanApiSectionPanelFactory : PanelFactory() {
             val token = String(apiToken.password)
 
             if (token != DUMMY_STRING) {
-                RequestGeneratorSettings.saveApiToken(token)
 
-                JOptionPane.showMessageDialog(
-                    null, "API-Token saved successfully", "Info", JOptionPane.INFORMATION_MESSAGE
-                )
+
+                if (ConnectToPostmanApi.verifyApiToken(token)) {
+                    RequestGeneratorSettings.saveApiToken(token)
+                    Messages.showErrorDialog("API-Token saved successfully", "Info")
+                    return@addActionListener
+                }
+
+                Messages.showErrorDialog("Invalid API-Token", "Error")
+                return@addActionListener
             }
+
+            Messages.showErrorDialog("Please Enter a API-TOKEN", "Info")
         }
         apiToken.text = DUMMY_STRING
 
