@@ -1,5 +1,8 @@
 package com.github.ferdistro.springpostmanrequestgenerator.settings
 
+import com.intellij.credentialStore.CredentialAttributes
+import com.intellij.credentialStore.Credentials
+import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service
@@ -10,12 +13,12 @@ import jakarta.xml.bind.annotation.XmlAccessType
 import jakarta.xml.bind.annotation.XmlAccessorType
 import jakarta.xml.bind.annotation.XmlElement
 import jakarta.xml.bind.annotation.XmlRootElement
+import kotlin.concurrent.thread
 
 
 @Service
 @State(
-    name = "RequestGeneratorSettings",
-    storages = [Storage("spring-postman-request-generator.xml")]
+    name = "RequestGeneratorSettings", storages = [Storage("spring-postman-request-generator.xml")]
 )
 class RequestGeneratorSettings : PersistentStateComponent<RequestGeneratorSettings.State> {
 
@@ -26,9 +29,11 @@ class RequestGeneratorSettings : PersistentStateComponent<RequestGeneratorSettin
         @XmlElement var useEnv: Boolean = false,
         @XmlElement var extra: Boolean = false
     )
+
     @XmlRootElement(name = "State")
     @XmlAccessorType(XmlAccessType.FIELD)
     data class State(
+        @XmlElement var apiActive: Boolean = false,
         @XmlElement var protocol: ContextSetting = ContextSetting("protocol", "http://"),
         @XmlElement var serverUrl: ContextSetting = ContextSetting("serverUrl", "localhost:8080"),
         @XmlElement var context: ContextSetting = ContextSetting("context", "/api")
@@ -42,17 +47,27 @@ class RequestGeneratorSettings : PersistentStateComponent<RequestGeneratorSettin
         XmlSerializerUtil.copyBean(state, myState)
     }
 
-    fun updateContext(update: RequestGeneratorSettings.ContextSetting.() -> Unit) {
-        myState.context.update()
+    companion object {
+        fun getInstance(): RequestGeneratorSettings =
+            ApplicationManager.getApplication().getService(RequestGeneratorSettings::class.java)
 
-        ApplicationManager.getApplication().invokeLater {
-            ApplicationManager.getApplication().saveSettings()
+        private val CREDENTIAL_KEY = "com.github.ferdistro.springpostmanrequestgenerator.apiToken"
+
+        fun saveApiToken(token: String) {
+            val credentialAttributes = CredentialAttributes(CREDENTIAL_KEY)
+            val credentials = Credentials("user", token)
+            thread {
+                PasswordSafe.instance.set(credentialAttributes, credentials)
+
+
+            }
+        }
+
+        fun loadApiToken(): String? {
+            val credentialAttributes = CredentialAttributes(CREDENTIAL_KEY)
+            return PasswordSafe.instance.get(credentialAttributes)?.password?.toString()
         }
     }
 
 
-    companion object {
-        fun getInstance(): RequestGeneratorSettings =
-            ApplicationManager.getApplication().getService(RequestGeneratorSettings::class.java)
-    }
 }

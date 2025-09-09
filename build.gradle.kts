@@ -1,7 +1,6 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
-import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask
 
 plugins {
     id("java")
@@ -38,6 +37,11 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.0")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
     implementation("org.jdesktop.swingx:jxmapviewer2:1.3.1")
+
+    implementation("org.json:json:20250517")
+    implementation("org.reflections:reflections:0.10.2")
+
+
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
         create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
@@ -79,9 +83,7 @@ intellijPlatform {
         changeNotes = providers.gradleProperty("pluginVersion").map { pluginVersion ->
             with(changelog) {
                 renderItem(
-                    (getOrNull(pluginVersion) ?: getUnreleased())
-                        .withHeader(false)
-                        .withEmptySections(false),
+                    (getOrNull(pluginVersion) ?: getUnreleased()).withHeader(false).withEmptySections(false),
                     Changelog.OutputType.HTML,
                 )
             }

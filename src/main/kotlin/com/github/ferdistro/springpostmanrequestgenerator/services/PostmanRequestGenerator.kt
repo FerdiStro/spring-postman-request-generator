@@ -46,9 +46,7 @@ class PostmanRequestGenerator {
         RequestMappingAnnotationExtractor(),
     )
 
-    private val supportedAnnotations = extractors
-        .map { it.annotationQualifiedName }
-        .toSet()
+    private val supportedAnnotations = extractors.map { it.annotationQualifiedName }.toSet()
 
     fun hasSupportedAnnotation(method: MethodInfo): Boolean {
         return supportedAnnotations.any { a ->
@@ -62,17 +60,18 @@ class PostmanRequestGenerator {
         val urlComponents = buildUrlComponents(annotationData.path, queryItems)
 
         val item = Item(
-            name = annotationData.name,
-            request = Request(
-                method = annotationData.method,
-                header = emptyList(),
-                url = urlComponents
-            ),
-            response = emptyList()
+            name = annotationData.name, request = Request(
+                method = annotationData.method, header = emptyList(), url = urlComponents
+            ), response = emptyList()
         )
 
         val service = method.project.getService(PermanentCache::class.java)
         service.addRequest(item)
+
+        if (RequestGeneratorSettings.getInstance().state.apiActive) {
+            ConnectToPostmanApi(service).postCollection();
+        }
+
     }
 
 
@@ -85,8 +84,7 @@ class PostmanRequestGenerator {
     }
 
     private fun extractAnnotationData(method: MethodInfo): AnnotationData {
-        return extractors
-            .firstNotNullOfOrNull { it.extractAnnotationData(method) }
+        return extractors.firstNotNullOfOrNull { it.extractAnnotationData(method) }
             ?: throw IllegalStateException("No supported annotation found on method: $method")
         //?: throw IllegalStateException("No supported annotation found on method: ${method.name}")
     }
@@ -99,10 +97,7 @@ class PostmanRequestGenerator {
         val pathComponents = buildPathComponents(sanitizedPath)
 
         return URL(
-            raw = rawUrl,
-            host = listOf(baseUrl()),
-            path = pathComponents,
-            query = queryItems
+            raw = rawUrl, host = listOf(baseUrl()), path = pathComponents, query = queryItems
         )
     }
 

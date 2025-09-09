@@ -10,7 +10,7 @@ Changelog starts on version 0.5.0
 ### Added
 
 - pipeline rollout to JETBRAINS-Marketplace
-
+- Edit Mapping Section
 ### Changed
 
 -
@@ -19,7 +19,15 @@ Changelog starts on version 0.5.0
 
 -
 
-## [0.5.0] - 2025-09.04
+## [0.6.0] - 2025-09-09
+
+### Added 
+
+- Postman-API connection ([#31](https://github.com/FerdiStro/spring-postman-request-generator/issues/31))
+- Toolwindow section for API-TOKEN and POST-options (Postman-API)
+- DOC for setting up and using new feature
+
+## [0.5.0] - 2025-09-04
 
 ### Added
 

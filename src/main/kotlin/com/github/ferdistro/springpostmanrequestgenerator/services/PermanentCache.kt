@@ -39,19 +39,23 @@ class PermanentCache(private val project: Project) {
 
     private fun createDefaultCollection(): PostmanCollection {
         return PostmanCollection(
-            info = Info(
-                name = DEFAULT_COLLECTION_NAME,
-                schema = POSTMAN_SCHEMA
+            collection = com.github.ferdistro.springpostmanrequestgenerator.postman.Collection(
+                info = Info(
+                    name = DEFAULT_COLLECTION_NAME, schema = POSTMAN_SCHEMA
+                ), item = emptyList()
             ),
-            item = emptyList()
-        )
+
+            )
     }
 
     fun addRequest(item: Item) {
         try {
-            val collection = loadOrCreateCollection()
-            val updatedCollection = collection.copy(
-                item = (collection.item ?: emptyList()) + item
+            val postmanCollection = loadOrCreateCollection()
+
+            val updatedCollection = PostmanCollection(
+                collection = postmanCollection.collection?.copy(
+                    item = (postmanCollection.collection?.item ?: emptyList()) + item
+                )
             )
 
             saveCollection(updatedCollection)
@@ -76,8 +80,10 @@ class PermanentCache(private val project: Project) {
             val collection = mapper.readValue<PostmanCollection>(content)
 
             collection.copy(
-                info = collection.info ?: Info(DEFAULT_COLLECTION_NAME, POSTMAN_SCHEMA),
-                item = collection.item ?: emptyList()
+                collection = collection.collection?.copy(
+                    info = collection.collection?.info ?: Info(DEFAULT_COLLECTION_NAME, POSTMAN_SCHEMA),
+                    item = collection.collection?.item ?: emptyList()
+                )
             )
         } catch (e: JsonProcessingException) {
             LOG.warn("Invalid JSON in collection file, creating new collection", e)
@@ -88,12 +94,25 @@ class PermanentCache(private val project: Project) {
         }
     }
 
+    fun loadCollectionJson(): String? {
+        return try {
+            if (!Files.exists(collectionPath)) {
+                LOG.warn("Collection file does not exist: $collectionPath")
+                return null
+            }
+
+            Files.readString(collectionPath)
+        } catch (e: IOException) {
+            LOG.error("Failed to read collection JSON from file", e)
+            null
+        }
+    }
+
     private fun saveCollection(collection: PostmanCollection) {
         try {
             Files.createDirectories(collectionPath.parent)
 
-            val jsonContent = mapper.writerWithDefaultPrettyPrinter()
-                .writeValueAsString(collection)
+            val jsonContent = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(collection)
 
             Files.writeString(
                 collectionPath,
@@ -166,8 +185,7 @@ class PermanentCache(private val project: Project) {
             }
         } catch (e: Exception) {
             LOG.warn("Failed to scroll to item: ${item.name}", e)
-        }
-        finally {
+        } finally {
             // Only release editor in unit test mode. In normal IDE mode the editor is owned by IDE and must not be released.
             if (ApplicationManager.getApplication().isUnitTestMode) {
                 EditorFactory.getInstance().releaseEditor(editor)
