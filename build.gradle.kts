@@ -35,7 +35,7 @@ dependencies {
     testImplementation(libs.opentest4j)
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.0")
-    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
+    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.4")
     implementation("org.jdesktop.swingx:jxmapviewer2:1.3.1")
 
     implementation("org.json:json:20250517")
