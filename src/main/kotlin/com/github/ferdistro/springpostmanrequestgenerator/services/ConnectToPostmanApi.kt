@@ -29,7 +29,7 @@ class ConnectToPostmanApi(private val permanentCache: PermanentCache) {
             return try {
                 val url = URI.create("https://api.getpostman.com/me").toURL()
                 val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
+                connection.requestMethod = API_GET
                 connection.setRequestProperty("X-Api-Key", apiToken)
                 connection.setRequestProperty("Content-Type", "application/json")
                 connection.connectTimeout = 2000

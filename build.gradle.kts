@@ -1,5 +1,6 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
@@ -110,6 +111,9 @@ intellijPlatform {
     pluginVerification {
         ides {
             recommended()
+            //Critical status in the past
+            create(IntelliJPlatformType.IntellijIdea, "253.20558.43")
+            create(IntelliJPlatformType.IntellijIdea, "253.17525.95")
         }
 
     }
