@@ -9,15 +9,17 @@ Changelog starts on version 0.5.0
 
 ### Added
 
-- pipeline rollout to JETBRAINS-Marketplace
-- Edit Mapping Section
+-
 ### Changed
 
 -
 
+### Fixed
+- Invocation of unresolved method EditorWindow.split$default(...) critical-error on IntelliJ IDEA Ultimate 253.20558.43 and 253.17525.95 ([#40](https://github.com/FerdiStro/spring-postman-request-generator/issues/40))
+
 ### Removed
 
--
+- 
 
 ## [0.6.0] - 2025-09-09
 
