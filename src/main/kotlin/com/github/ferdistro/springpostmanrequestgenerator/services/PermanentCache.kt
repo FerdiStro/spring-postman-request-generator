@@ -161,7 +161,10 @@ class PermanentCache(private val project: Project) {
             val currentWindow = fileEditorManagerEx?.currentWindow
 
             if (currentWindow != null) {
-                currentWindow.split(SwingConstants.VERTICAL, false, virtualFile, true)
+                currentWindow.split(SwingConstants.VERTICAL, false, virtualFile,
+                    focusNew = true,
+                    fileIsSecondaryComponent = true
+                )
             } else {
                 editorManager.openFile(virtualFile, true)
             }
