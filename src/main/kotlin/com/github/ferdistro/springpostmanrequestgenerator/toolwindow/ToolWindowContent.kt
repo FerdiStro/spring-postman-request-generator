@@ -10,6 +10,7 @@ import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.FlowLayout
 import java.awt.Font
+import java.awt.Graphics
 import javax.swing.*
 
 
@@ -37,9 +38,15 @@ class ToolWindowContent : PanelFactory() {
 
     override fun panelStart(): JPanel {
         val panel = JPanel(BorderLayout())
-        val headline = JLabel(
+        val headline = object : JLabel(
             "Spring Postman Request Generator", SwingConstants.CENTER
-        ).apply {
+        ){
+            override fun paintComponent(g: Graphics) {
+                background = Colors.background
+                foreground = Colors.keyword
+                super.paintComponent(g)
+            }
+        }.apply {
             horizontalTextPosition = SwingConstants.RIGHT
             iconTextGap = 12
             font = font.deriveFont(Font.BOLD, 24.0f)
