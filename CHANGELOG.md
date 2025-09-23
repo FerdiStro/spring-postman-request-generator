@@ -9,10 +9,14 @@ Changelog starts on version 0.5.0
 
 ### Added
 
--
+- Color grading like the Theme ([#39](https://github.com/FerdiStro/spring-postman-request-generator/issues/39))
 ### Changed
 
--
+- Better Text scaling ([#39](https://github.com/FerdiStro/spring-postman-request-generator/issues/39))
+- save-button feedback with an info message ([#39](https://github.com/FerdiStro/spring-postman-request-generator/issues/39))
+- application context disables on the disable-button ([#39](https://github.com/FerdiStro/spring-postman-request-generator/issues/39))
+
+
 
 ### Fixed
 - Invocation of unresolved method EditorWindow.split$default(...) critical-error on IntelliJ IDEA Ultimate 253.20558.43 and 253.17525.95 ([#40](https://github.com/FerdiStro/spring-postman-request-generator/issues/40))
