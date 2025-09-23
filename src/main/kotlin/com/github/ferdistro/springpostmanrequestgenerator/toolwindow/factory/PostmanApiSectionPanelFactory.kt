@@ -4,13 +4,14 @@ import com.github.ferdistro.springpostmanrequestgenerator.services.ConnectToPost
 import com.github.ferdistro.springpostmanrequestgenerator.settings.RequestGeneratorSettings
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ui.Messages
-import com.intellij.util.ui.JBUI
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import javax.swing.*
 
-private const val DESCRIPTION_TEXT =
-    "Enter your Postman API-Token to directly upload and update the generated collection to your default Postman workspace."
+
+private const val DOC_TEXT =
+    "Enter your Postman API-Token to directly upload and update the generated collection to your default Postman workspace. Generate yourt own postman API-Token"
+private const val API_TOKEN_URL = "https://go.postman.co/settings/me/api-keys"
 private const val DUMMY_STRING: String = "PMAK-XXXXXXXXXX-XXXXXXXXXXXXX"
 
 
@@ -25,6 +26,7 @@ class PostmanApiSectionPanelFactory : PanelFactory() {
         isSelected = settings.state.apiActive
         addActionListener {
             apiToken.isEnabled = isSelected
+            apiTokenSave.isEnabled = isSelected
             settings.state.apiActive = isSelected
             ApplicationManager.getApplication().saveSettings()
         }
@@ -49,7 +51,7 @@ class PostmanApiSectionPanelFactory : PanelFactory() {
 
                 if (ConnectToPostmanApi.verifyApiToken(token)) {
                     RequestGeneratorSettings.saveApiToken(token)
-                    Messages.showErrorDialog("API-Token saved successfully", "Info")
+                    Messages.showInfoMessage("API-Token saved successfully", "Info")
                     return@addActionListener
                 }
 
@@ -57,7 +59,7 @@ class PostmanApiSectionPanelFactory : PanelFactory() {
                 return@addActionListener
             }
 
-            Messages.showErrorDialog("Please Enter a API-TOKEN", "Info")
+            Messages.showErrorDialog("Please Enter a API-TOKEN in the InputField", "No Token provided")
         }
         apiToken.text = DUMMY_STRING
 
@@ -67,40 +69,51 @@ class PostmanApiSectionPanelFactory : PanelFactory() {
     override fun panelCenter(): JPanel {
         val panel = JPanel(GridBagLayout())
 
-
-        val gbc = GridBagConstraints().apply {
-            insets = JBUI.insets(5)
-            fill = GridBagConstraints.HORIZONTAL
-            weightx = 1.0
-        }
+        val gbc = GridBagConstraints()
 
         gbc.gridx = 0
         gbc.gridy = 0
         gbc.gridwidth = 3
-        panel.add(JLabel(DESCRIPTION_TEXT), gbc)
+        gbc.weighty = 1.0
+        gbc.weightx = 1.0
+        gbc.fill = GridBagConstraints.BOTH
 
+        val doc = docPanel(DOC_TEXT, API_TOKEN_URL)
+        panel.add(doc, gbc)
+
+        //API-Token Text
+        gbc.fill = GridBagConstraints.HORIZONTAL
+        gbc.weighty = 0.0
+        gbc.gridy = 1
 
         gbc.gridx = 0
-        gbc.gridy = 1
         gbc.gridwidth = 1
         gbc.weightx = 0.0
         panel.add(JLabel("API-TOKEN"), gbc)
 
 
-        gbc.gridx = 1
-        gbc.weightx = 1.0
-
+        //API-Token input field
         apiToken.isEnabled = activate.isSelected
+
+        gbc.gridx = 1
+        gbc.gridwidth = 1
+        gbc.weightx = 1.0
         panel.add(apiToken, gbc)
 
 
+        //Save API-TOKEN button
+        apiTokenSave.isEnabled = activate.isSelected
+
         gbc.gridx = 2
+        gbc.gridwidth = 1
         gbc.weightx = 0.0
         panel.add(apiTokenSave, gbc)
 
+
+        //Activate Checkbox
         gbc.gridx = 0
         gbc.gridy = 2
-        gbc.gridwidth = 1
+        gbc.gridwidth = 3
         gbc.weightx = 0.0
         panel.add(activate, gbc)
 
@@ -109,6 +122,11 @@ class PostmanApiSectionPanelFactory : PanelFactory() {
 
     override fun panelEnd(): JPanel {
         return JPanel()
+    }
+
+    //extra height, help dealing problems with y-cords expansion
+    override fun extraSpace(): Int {
+        return 60
     }
 
 

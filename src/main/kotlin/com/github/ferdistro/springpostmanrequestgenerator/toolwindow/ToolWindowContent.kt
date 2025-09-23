@@ -4,15 +4,18 @@ import com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory.Edi
 import com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory.EditMappingSectionFactory
 import com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory.PanelFactory
 import com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory.PostmanApiSectionPanelFactory
-import com.intellij.ide.BrowserUtil
-import org.jdesktop.swingx.JXHyperlink
 import java.awt.BorderLayout
-import java.awt.Color
-import java.awt.FlowLayout
+import java.awt.Dimension
 import java.awt.Font
 import java.awt.Graphics
-import javax.swing.*
+import javax.swing.BoxLayout
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.SwingConstants
 
+private const val TOP_TEXT = "Check the Toolwindow Documentation for more information's "
+private const val TOOLWINDOW_DOC_URL =
+    "https://github.com/FerdiStro/spring-postman-request-generator/tree/main/doc/Toolwindow.md"
 
 class ToolWindowContent : PanelFactory() {
 
@@ -24,25 +27,27 @@ class ToolWindowContent : PanelFactory() {
     )
 
     override fun createPanel(): JPanel {
-        val contentPanel = JPanel()
-
-        contentPanel.setLayout(BorderLayout(0, 0))
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0))
-
-        contentPanel.add(panelStart(), BorderLayout.PAGE_START)
-        contentPanel.add(panelCenter(), BorderLayout.CENTER)
-
-        return contentPanel
+        return object : JPanel() {
+            override fun paintComponent(g: Graphics) {
+                background = Colors.background
+                super.paintComponent(g)
+            }
+        }.apply {
+            maximumSize = Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
+            layout = BorderLayout(0, 0)
+            add(panelStart(), BorderLayout.PAGE_START)
+            add(panelCenter(), BorderLayout.CENTER)
+        }
     }
 
 
     override fun panelStart(): JPanel {
-        val panel = JPanel(BorderLayout())
+        val panelStart = JPanel(BorderLayout())
+
         val headline = object : JLabel(
-            "Spring Postman Request Generator", SwingConstants.CENTER
-        ){
+            "Spring Postman Request Generator", CENTER
+        ) {
             override fun paintComponent(g: Graphics) {
-                background = Colors.background
                 foreground = Colors.keyword
                 super.paintComponent(g)
             }
@@ -52,40 +57,27 @@ class ToolWindowContent : PanelFactory() {
             font = font.deriveFont(Font.BOLD, 24.0f)
             horizontalAlignment = SwingConstants.CENTER
         }
-        panel.add(headline, BorderLayout.PAGE_START)
+        panelStart.add(headline, BorderLayout.PAGE_START)
 
 
-        val docLabel = JLabel("Check the Toolwindow Documentation for more informations. ")
-        val jxHyperlink = JXHyperlink().apply {
-            text = "Documentation"
-            toolTipText = "Open online documentation"
-            clickedColor = Color(128, 0, 128)
-            addActionListener {
-                BrowserUtil.browse("https://github.com/FerdiStro/spring-postman-request-generator/tree/main/doc/Toolwindow.md")
-            }
-        }
-        val innerPanel = JPanel(FlowLayout(FlowLayout.LEFT)).apply {
-            add(docLabel)
-            add(jxHyperlink)
-        }
+        val docPanel = docPanel(TOP_TEXT, TOOLWINDOW_DOC_URL)
+        panelStart.add(docPanel, BorderLayout.CENTER)
 
-        panel.add(innerPanel, BorderLayout.CENTER)
-        return panel
+        return panelStart
     }
 
 
     override fun panelCenter(): JPanel {
         return JPanel().apply {
             layout = BoxLayout(this, BoxLayout.Y_AXIS)
-            factoryList.forEach {
-
-                add(it.createPanel().apply {
-                    maximumSize = java.awt.Dimension(Int.MAX_VALUE, preferredSize.height)
+            factoryList.forEach { factory ->
+                add(factory.createPanel().apply {
+                    maximumSize = Dimension(Int.MAX_VALUE, preferredSize.height + factory.extraSpace())
                 })
-                add(Box.createVerticalStrut(20))
             }
         }
     }
+
 
     override fun panelEnd(): JPanel {
         return JPanel()
