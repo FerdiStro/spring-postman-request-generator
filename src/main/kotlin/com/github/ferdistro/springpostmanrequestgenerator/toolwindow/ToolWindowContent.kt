@@ -1,9 +1,8 @@
 package com.github.ferdistro.springpostmanrequestgenerator.toolwindow
 
-import com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory.EditContextSectionPanelFactory
-import com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory.EditMappingSectionFactory
-import com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory.PanelFactory
-import com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory.PostmanApiSectionPanelFactory
+import com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory.*
+import com.github.ferdistro.springpostmanrequestgenerator.util.Colors
+import com.github.ferdistro.springpostmanrequestgenerator.util.UIUtils
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Font
@@ -21,10 +20,11 @@ class ToolWindowContent : PanelFactory() {
 
 
     val factoryList: List<PanelFactory> = listOf(
+        GenerellSettingsSectionFactory(),
         EditContextSectionPanelFactory(),
         EditMappingSectionFactory(),
         PostmanApiSectionPanelFactory(),
-    )
+        )
 
     override fun createPanel(): JPanel {
         return object : JPanel() {
@@ -60,7 +60,7 @@ class ToolWindowContent : PanelFactory() {
         panelStart.add(headline, BorderLayout.PAGE_START)
 
 
-        val docPanel = docPanel(TOP_TEXT, TOOLWINDOW_DOC_URL)
+        val docPanel = UIUtils.docPanel(TOP_TEXT, TOOLWINDOW_DOC_URL)
         panelStart.add(docPanel, BorderLayout.CENTER)
 
         return panelStart

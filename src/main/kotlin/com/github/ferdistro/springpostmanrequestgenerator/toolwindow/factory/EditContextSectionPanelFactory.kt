@@ -1,5 +1,7 @@
 package com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory
 
+import com.github.ferdistro.springpostmanrequestgenerator.util.Colors
+import com.github.ferdistro.springpostmanrequestgenerator.util.UIUtils
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ui.Messages
 import com.intellij.util.ui.JBUI
@@ -15,13 +17,14 @@ class EditContextSectionPanelFactory : PanelFactory() {
 
 
     override fun panelStart(): JPanel {
-        return defaultHeader("Context Settings")
+        return UIUtils.defaultHeader("Context Settings")
     }
 
     override fun panelName(): String {
         return "Edit Context Section"
     }
 
+    val saveButton = UIUtils.defaultButton("Save")
     val protocolCombo = JComboBox(arrayOf("http://", "https://"))
     val protocolEnvButton = JCheckBox(ENV_BUTTON_TAG)
     val serverTextField = JTextField(settings.state.serverUrl.value)
@@ -50,6 +53,8 @@ class EditContextSectionPanelFactory : PanelFactory() {
             override fun paintComponent(g: java.awt.Graphics?) {
                 changeTextFieldColor(appContextTextField)
                 changeTextFieldColor(serverTextField)
+                saveButton.foreground = Colors.keyword
+                saveButton.border = UIUtils.defaultButton("").border
             }
         }
 
@@ -63,8 +68,8 @@ class EditContextSectionPanelFactory : PanelFactory() {
             labelText: String, field: JComponent, extra: JComponent? = null, defaultOption: JCheckBox, row: Int
         ) {
             gbc.gridx = 0
-            gbc.gridy = row
             gbc.weightx = 0.0
+            gbc.gridy = row
             editSection.add(JLabel(labelText), gbc)
 
             gbc.gridx = 1
@@ -114,7 +119,7 @@ class EditContextSectionPanelFactory : PanelFactory() {
 
 
     override fun panelEnd(): JPanel {
-        val saveButton = JButton("Save")
+
         saveButton.addActionListener {
 
             settings.state.serverUrl.value = serverTextField.text
@@ -133,6 +138,7 @@ class EditContextSectionPanelFactory : PanelFactory() {
         }
 
         return JPanel(BorderLayout()).apply {
+            border = BorderFactory.createEmptyBorder(20, 20, 20, 20)
             add(saveButton)
         }
     }

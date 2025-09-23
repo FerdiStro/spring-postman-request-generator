@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.github.ferdistro.springpostmanrequestgenerator.postman.Info
 import com.github.ferdistro.springpostmanrequestgenerator.postman.Item
 import com.github.ferdistro.springpostmanrequestgenerator.postman.PostmanCollection
+import com.github.ferdistro.springpostmanrequestgenerator.settings.RequestGeneratorSettings
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger
@@ -29,19 +30,18 @@ class PermanentCache(private val project: Project) {
 
     companion object {
         private val LOG = logger<PermanentCache>()
-        private const val COLLECTION_FILE_NAME = "generated-request.json"
         private const val POSTMAN_SCHEMA = "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-        private const val DEFAULT_COLLECTION_NAME = "Generated Requests"
     }
 
     private val mapper = jacksonObjectMapper().registerKotlinModule()
-    private val collectionPath: Path = Paths.get(project.basePath ?: ".", COLLECTION_FILE_NAME)
+    private val collectionPath: Path =
+        Paths.get(project.basePath ?: ".", RequestGeneratorSettings.getInstance().state.general.collectionFileName)
 
     private fun createDefaultCollection(): PostmanCollection {
         return PostmanCollection(
             collection = com.github.ferdistro.springpostmanrequestgenerator.postman.Collection(
                 info = Info(
-                    name = DEFAULT_COLLECTION_NAME, schema = POSTMAN_SCHEMA
+                    name = RequestGeneratorSettings.getInstance().state.general.collectionName, schema = POSTMAN_SCHEMA
                 ), item = emptyList()
             ),
 
@@ -59,7 +59,9 @@ class PermanentCache(private val project: Project) {
             )
 
             saveCollection(updatedCollection)
-            navigateToNewItem(updatedCollection, item)
+            if (RequestGeneratorSettings.getInstance().state.general.openAfterGeneration) {
+                navigateToNewItem(updatedCollection, item)
+            }
 
         } catch (e: Exception) {
             LOG.error("Failed to add request item: ${item.name}", e)
@@ -81,7 +83,7 @@ class PermanentCache(private val project: Project) {
 
             collection.copy(
                 collection = collection.collection?.copy(
-                    info = collection.collection?.info ?: Info(DEFAULT_COLLECTION_NAME, POSTMAN_SCHEMA),
+                    info = Info(RequestGeneratorSettings.getInstance().state.general.collectionName, POSTMAN_SCHEMA),
                     item = collection.collection?.item ?: emptyList()
                 )
             )
@@ -161,9 +163,8 @@ class PermanentCache(private val project: Project) {
             val currentWindow = fileEditorManagerEx?.currentWindow
 
             if (currentWindow != null) {
-                currentWindow.split(SwingConstants.VERTICAL, false, virtualFile,
-                    focusNew = true,
-                    fileIsSecondaryComponent = true
+                currentWindow.split(
+                    SwingConstants.VERTICAL, false, virtualFile, focusNew = true, fileIsSecondaryComponent = true
                 )
             } else {
                 editorManager.openFile(virtualFile, true)

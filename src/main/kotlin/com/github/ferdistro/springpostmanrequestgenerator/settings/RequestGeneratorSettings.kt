@@ -30,14 +30,23 @@ class RequestGeneratorSettings : PersistentStateComponent<RequestGeneratorSettin
         @XmlElement var extra: Boolean = false
     )
 
+    @XmlAccessorType(XmlAccessType.FIELD)
+    data class GeneralSettings(
+        @XmlElement var openAfterGeneration: Boolean = true,
+        @XmlElement var collectionName: String = "Generated Requests",
+        @XmlElement var collectionFileName: String = "generated-request.json",
+    )
+
     @XmlRootElement(name = "State")
     @XmlAccessorType(XmlAccessType.FIELD)
     data class State(
         @XmlElement var apiActive: Boolean = false,
         @XmlElement var protocol: ContextSetting = ContextSetting("protocol", "http://"),
         @XmlElement var serverUrl: ContextSetting = ContextSetting("serverUrl", "localhost:8080"),
-        @XmlElement var context: ContextSetting = ContextSetting("context", "/api")
+        @XmlElement var context: ContextSetting = ContextSetting("context", "/api"),
+        @XmlElement var general: GeneralSettings = GeneralSettings()
     )
+
 
     private var myState = State()
 

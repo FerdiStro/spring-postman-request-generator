@@ -2,6 +2,7 @@ package com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory
 
 import com.github.ferdistro.springpostmanrequestgenerator.services.ConnectToPostmanApi
 import com.github.ferdistro.springpostmanrequestgenerator.settings.RequestGeneratorSettings
+import com.github.ferdistro.springpostmanrequestgenerator.util.UIUtils
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ui.Messages
 import java.awt.GridBagConstraints
@@ -34,7 +35,7 @@ class PostmanApiSectionPanelFactory : PanelFactory() {
 
 
     override fun panelStart(): JPanel {
-        return defaultHeader("Postman API Settings")
+        return UIUtils.defaultHeader("Postman API Settings")
     }
 
     override fun panelName(): String {
@@ -78,7 +79,7 @@ class PostmanApiSectionPanelFactory : PanelFactory() {
         gbc.weightx = 1.0
         gbc.fill = GridBagConstraints.BOTH
 
-        val doc = docPanel(DOC_TEXT, API_TOKEN_URL)
+        val doc = UIUtils.docPanel(DOC_TEXT, API_TOKEN_URL)
         panel.add(doc, gbc)
 
         //API-Token Text
