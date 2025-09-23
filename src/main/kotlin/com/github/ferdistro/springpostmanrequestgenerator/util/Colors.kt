@@ -1,9 +1,8 @@
-package com.github.ferdistro.springpostmanrequestgenerator.toolwindow
+package com.github.ferdistro.springpostmanrequestgenerator.util
 
-
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.colors.EditorColorsScheme
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import java.awt.Color
 
 object Colors {

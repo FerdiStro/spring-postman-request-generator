@@ -1,11 +1,12 @@
 package com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory
 
+import com.github.ferdistro.springpostmanrequestgenerator.util.UIUtils
 import javax.swing.JPanel
 
 class EditMappingSectionFactory : PanelFactory() {
 
     override fun panelStart(): JPanel {
-        return defaultHeader("Mapping Settings")
+        return UIUtils.defaultHeader("Mapping Settings")
     }
 
     override fun panelName(): String {
@@ -15,7 +16,7 @@ class EditMappingSectionFactory : PanelFactory() {
     //todo: feature context mapping...
     override fun panelCenter(): JPanel {
         val panel = JPanel()
-        panel.add(defaultHeader("Planed for Version >= 0.7.0 "))
+        panel.add(UIUtils.defaultHeader("Planed for Version >= 0.7.0 "))
         return panel
     }
 

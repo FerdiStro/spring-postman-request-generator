@@ -68,7 +68,7 @@ class ConnectToPostmanApi(private val permanentCache: PermanentCache) {
 
             for (i in 0 until collections.length()) {
                 val collection = collections.getJSONObject(i)
-                if (collection.getString("name") == "Generated Requests") {
+                if (collection.getString("name") == RequestGeneratorSettings.getInstance().state.general.collectionName) {
                     return collection.getString("id")
                 }
             }
