@@ -1,6 +1,7 @@
 package com.github.ferdistro.springpostmanrequestgenerator.services
 
 import com.github.ferdistro.springpostmanrequestgenerator.settings.RequestGeneratorSettings
+import com.intellij.openapi.components.Service
 import kotlinx.io.IOException
 import org.json.JSONArray
 import org.json.JSONObject
@@ -20,28 +21,27 @@ private const val API_GET = "GET"
 private const val API_POST = "POST"
 private const val API_PUT = "PUT"
 
-class ConnectToPostmanApi(private val permanentCache: PermanentCache) {
+@Service(Service.Level.PROJECT)
+class ConnectToPostmanApi() {
 
 
-    companion object {
-        fun verifyApiToken(apiToken: String): Boolean {
-            if (apiToken.isBlank()) return false
-            return try {
-                val url = URI.create("https://api.getpostman.com/me").toURL()
-                val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = API_GET
-                connection.setRequestProperty("X-Api-Key", apiToken)
-                connection.setRequestProperty("Content-Type", "application/json")
-                connection.connectTimeout = 2000
-                connection.readTimeout = 2000
+    fun verifyApiToken(apiToken: String): Boolean {
+        if (apiToken.isBlank()) return false
+        return try {
+            val url = URI.create("https://api.getpostman.com/me").toURL()
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = API_GET
+            connection.setRequestProperty("X-Api-Key", apiToken)
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.connectTimeout = 2000
+            connection.readTimeout = 2000
 
-                val code = connection.responseCode
-                connection.disconnect()
-                code == 200
-            } catch (e: Exception) {
-                e.printStackTrace()
-                false
-            }
+            val code = connection.responseCode
+            connection.disconnect()
+            code == 200
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
         }
     }
 
@@ -83,7 +83,7 @@ class ConnectToPostmanApi(private val permanentCache: PermanentCache) {
     }
 
 
-    fun postCollection() {
+    fun postCollection(permanentCache: PermanentCache) {
         thread {
             val apiToken = RequestGeneratorSettings.loadApiToken() ?: ""
 

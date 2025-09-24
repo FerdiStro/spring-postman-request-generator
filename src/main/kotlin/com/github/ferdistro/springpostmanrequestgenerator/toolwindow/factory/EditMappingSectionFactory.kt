@@ -16,7 +16,6 @@ class EditMappingSectionFactory : PanelFactory() {
     //todo: feature context mapping...
     override fun panelCenter(): JPanel {
         val panel = JPanel()
-        panel.add(UIUtils.defaultHeader("Planed for Version >= 0.7.0 "))
         return panel
     }
 

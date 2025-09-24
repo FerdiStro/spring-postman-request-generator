@@ -4,21 +4,15 @@ import com.github.ferdistro.springpostmanrequestgenerator.settings.RequestGenera
 import com.github.ferdistro.springpostmanrequestgenerator.util.Colors
 import java.awt.BorderLayout
 import java.awt.Component
-import java.awt.Font
 import java.awt.Graphics
 import javax.swing.BorderFactory
 import javax.swing.BorderFactory.createTitledBorder
-import javax.swing.JLabel
 import javax.swing.JPanel
-import javax.swing.SwingConstants
 import javax.swing.border.CompoundBorder
 
 
 abstract class PanelFactory {
 
-    open fun extraSpace(): Int {
-        return 0
-    }
 
     val settings: RequestGeneratorSettings
         get() = RequestGeneratorSettings.getInstance()
@@ -66,7 +60,6 @@ abstract class PanelFactory {
         }
         return panel
     }
-
 
 
 }

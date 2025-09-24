@@ -48,9 +48,10 @@ class PostmanApiSectionPanelFactory : PanelFactory() {
             val token = String(apiToken.password)
 
             if (token != DUMMY_STRING) {
+                val postmanApi = com.intellij.openapi.project.ProjectManager.getInstance().defaultProject.getService(
+                    ConnectToPostmanApi::class.java)
 
-
-                if (ConnectToPostmanApi.verifyApiToken(token)) {
+                if (postmanApi.verifyApiToken(token)) {
                     RequestGeneratorSettings.saveApiToken(token)
                     Messages.showInfoMessage("API-Token saved successfully", "Info")
                     return@addActionListener
@@ -123,11 +124,6 @@ class PostmanApiSectionPanelFactory : PanelFactory() {
 
     override fun panelEnd(): JPanel {
         return JPanel()
-    }
-
-    //extra height, help dealing problems with y-cords expansion
-    override fun extraSpace(): Int {
-        return 60
     }
 
 

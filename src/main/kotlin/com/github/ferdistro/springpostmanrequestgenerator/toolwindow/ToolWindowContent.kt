@@ -3,11 +3,7 @@ package com.github.ferdistro.springpostmanrequestgenerator.toolwindow
 import com.github.ferdistro.springpostmanrequestgenerator.toolwindow.factory.*
 import com.github.ferdistro.springpostmanrequestgenerator.util.Colors
 import com.github.ferdistro.springpostmanrequestgenerator.util.UIUtils
-import java.awt.BorderLayout
-import java.awt.Dimension
-import java.awt.Font
-import java.awt.Graphics
-import javax.swing.BoxLayout
+import java.awt.*
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.SwingConstants
@@ -24,7 +20,7 @@ class ToolWindowContent : PanelFactory() {
         EditContextSectionPanelFactory(),
         EditMappingSectionFactory(),
         PostmanApiSectionPanelFactory(),
-        )
+    )
 
     override fun createPanel(): JPanel {
         return object : JPanel() {
@@ -68,19 +64,24 @@ class ToolWindowContent : PanelFactory() {
 
 
     override fun panelCenter(): JPanel {
-        return JPanel().apply {
-            layout = BoxLayout(this, BoxLayout.Y_AXIS)
-            factoryList.forEach { factory ->
-                add(factory.createPanel().apply {
-                    maximumSize = Dimension(Int.MAX_VALUE, preferredSize.height + factory.extraSpace())
-                })
+        val gbc = GridBagConstraints().apply {
+            fill = GridBagConstraints.BOTH
+            weightx = 1.0
+            weighty = 1.0
+        }
+        return JPanel(GridBagLayout()).apply {
+            for (i in factoryList.indices) {
+                gbc.gridy = i
+                val createPanel = factoryList[i].createPanel()
+                add(createPanel, gbc)
             }
         }
     }
 
-
     override fun panelEnd(): JPanel {
         return JPanel()
     }
+
+
 }
 

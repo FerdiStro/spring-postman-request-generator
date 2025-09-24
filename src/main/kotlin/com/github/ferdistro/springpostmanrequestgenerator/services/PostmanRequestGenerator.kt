@@ -13,6 +13,8 @@ import com.intellij.openapi.components.Service
 
 @Service(Service.Level.PROJECT)
 class PostmanRequestGenerator {
+
+
     private fun baseUrl(): String {
         val settings = RequestGeneratorSettings.getInstance()
         val urlBuilder: StringBuilder = StringBuilder()
@@ -65,11 +67,13 @@ class PostmanRequestGenerator {
             ), response = emptyList()
         )
 
-        val service = method.project.getService(PermanentCache::class.java)
-        service.addRequest(item)
+        val permanentCache = method.project.getService(PermanentCache::class.java)
+        permanentCache.addRequest(item)
 
         if (RequestGeneratorSettings.getInstance().state.apiActive) {
-            ConnectToPostmanApi(service).postCollection();
+
+            val postmanApi = method.project.getService(ConnectToPostmanApi::class.java)
+            postmanApi.postCollection(permanentCache)
         }
 
     }
