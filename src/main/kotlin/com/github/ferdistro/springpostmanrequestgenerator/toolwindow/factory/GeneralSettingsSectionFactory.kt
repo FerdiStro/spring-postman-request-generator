@@ -10,17 +10,17 @@ import java.awt.GridBagLayout
 import javax.swing.*
 
 
-class GenerellSettingsSectionFactory : PanelFactory() {
+class GeneralSettingsSectionFactory : PanelFactory() {
     val openAfterGenerate: JCheckBox = JCheckBox()
     val collectionName = JTextField(settings.state.general.collectionName)
     val saveButton = UIUtils.defaultButton("Save")
 
     override fun panelStart(): JPanel {
-        return UIUtils.defaultHeader("Generell Settings")
+        return UIUtils.defaultHeader("General Settings")
     }
 
     override fun panelName(): String {
-        return "Generell Settings Section"
+        return "General Settings Section"
     }
 
     override fun panelCenter(): JPanel {

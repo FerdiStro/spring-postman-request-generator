@@ -1,6 +1,6 @@
 <idea-plugin require-restart="true">
     <id>com.github.ferdistro.springpostmanrequestgenerator</id>
-    <name>Generate Spring Postman requests</name>
+    <name>spring-postman-request-generator</name>
     <vendor>FerdiStro</vendor>
 
     <depends>com.intellij.modules.platform</depends>
