@@ -20,7 +20,7 @@ class ToolWindowContent : PanelFactory() {
 
 
     val factoryList: List<PanelFactory> = listOf(
-        GenerellSettingsSectionFactory(),
+        GeneralSettingsSectionFactory(),
         EditContextSectionPanelFactory(),
         EditMappingSectionFactory(),
         PostmanApiSectionPanelFactory(),

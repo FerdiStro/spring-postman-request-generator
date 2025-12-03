@@ -9,8 +9,26 @@ Changelog starts on version 0.5.0
 
 ### Added
 
+- 
+
+### Changed
+
+- 
+
+### Fixed
+
+- 
+
+### Removed
+
+-
+
+## [0.6.1] - 2025-12-03
+
+### Added
+
 - Color grading like the Theme ([#39](https://github.com/FerdiStro/spring-postman-request-generator/issues/39))
-- Add Generell Settings Section options for Collection-Name and open .json after
+- Add General Settings Section options for Collection-Name and open .json after
   generation ([#38](https://github.com/FerdiStro/spring-postman-request-generator/issues/38))
 
 ### Changed
@@ -27,9 +45,6 @@ Changelog starts on version 0.5.0
 - Invocation of unresolved method EditorWindow.split$default(...) critical-error on IntelliJ IDEA Ultimate 253.20558.43
   and 253.17525.95 ([#40](https://github.com/FerdiStro/spring-postman-request-generator/issues/40))
 
-### Removed
-
--
 
 ## [0.6.0] - 2025-09-09
 
