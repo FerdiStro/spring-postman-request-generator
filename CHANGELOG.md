@@ -21,7 +21,16 @@ Changelog starts on version 0.5.0
 
 ### Removed
 
--
+
+## [0.6.2] - 2025-12-15
+
+### Changed
+
+- README.md update plugin description with new stats badage
+
+### Fixed
+- Plugin works now on 253.* Intellij Builds ([#64](https://github.com/FerdiStro/spring-postman-request-generator/issues/64)) 
+
 
 ## [0.6.1] - 2025-12-03
 
